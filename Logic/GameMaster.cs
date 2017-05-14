@@ -1,9 +1,8 @@
 ﻿using Logic.Data;
+using Logic.Interface;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Logic
 {
@@ -11,16 +10,21 @@ namespace Logic
     {
         public GameMode Mode { get; private set; }
         public TimeSpan Elapsed { get; private set; }
+
         public Player First { get; private set; }
         public Player Actived { get; private set; }
         public Player Next { get; private set; }
         public Player Front { get; private set; }
         public Player Winner { get; private set; }
+
         public bool IsStarted { get; private set; }
         public bool IsAttached { get; private set; }
+        public bool IsOnline { get; private set; }
+
         private Dictionary<string, Player> players { get; set; }
         private Dictionary<string, PlayerData> data { get; set; }
         private LogicControls logics;
+        private object lockPlayers = new object();
 
         public GameMaster(LogicControls logics)
         {
@@ -31,27 +35,29 @@ namespace Logic
         //before game start
         public bool Join(Player player)
         {
-            if (player == null || !IsAttached || IsStarted )
+            if (player == null || !IsAttached || IsStarted)
                 return false;
-
-            if (players.ContainsValue(player)) return true;
-            if (players.Count >= logics.PlayerLimits) return false;
-            string token = GenerateToken();
-            player.Token = token;
-
-            if(players.Count > 0)
+            lock (lockPlayers)
             {
-                var first = players.First().Value;
-                var last = players.Last().Value;
-                last.Next = player;
-                player.Front = last;
-                player.Next = first;
-            }
-            player.Register(this);
-            players.Add(token, player);
-            System.Diagnostics.Debug.WriteLine($"Player[{player.Name}] Joined. Token[{token}]");
+                if (players.ContainsValue(player)) return true;
+                if (players.Count >= logics.MaxPlayer) return false;
+                string token = generateToken();
+                player.Token = token;
 
-            return true;
+                if (players.Count > 0)
+                {
+                    var first = players.First().Value;
+                    var last = players.Last().Value;
+                    last.Next = player;
+                    player.Front = last;
+                    player.Next = first;
+                }
+                players.Add(token, player);
+                player.IsAttached = true;
+                System.Diagnostics.Debug.WriteLine($"Player[{player.Name}] Joined. Token[{token}]");
+
+                return true;
+            }
         }
 
         public bool Leave(string token)
@@ -118,25 +124,31 @@ namespace Logic
                 return false;
             return false;
         }
-
+        
         private void FillAI(int num, AILevel level)
         {
             for (int i = 0; i < num; i++)
             {
-                var player = MakeVirtualPlayer(level);
+                var player = makeAIPlayer(level);
                 this.Join(player);
             }
         }
 
-        private string GenerateToken()
+        private string generateToken()
         {
             return Convert.ToBase64String(Guid.NewGuid().ToByteArray()).TrimEnd('=');
         }
-
-        private Player MakeVirtualPlayer(AILevel level)
+        
+        private Player makeOnlinePlayer(string token)
         {
-            return null;
+            return new OnlinePlayer();
         }
+
+        private Player makeAIPlayer(AILevel level)
+        {
+            return new AIPlayer();
+        }
+
 
         private class PlayerData : IDisposable
         {

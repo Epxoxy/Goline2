@@ -29,7 +29,7 @@ namespace Goline2
 
         private void OnLoaded(object sender, RoutedEventArgs e)
         {
-            GameMaster master = new GameMaster(new LogicControls() { PlayerLimits = 2 });
+            GameMaster master = new GameMaster(new LogicControls(2, 2, 24));
             Player p1 = new Player() { Name = "p1" };
             Player p2 = new Player() { Name = "p2" };
             if (!master.IsAttached)

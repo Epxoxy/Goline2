@@ -40,6 +40,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Message.cs" />
+    <Compile Include="Player\AIPlayer.cs" />
     <Compile Include="Analyzer\AlphaBetaMaxMinAnalyzer.cs" />
     <Compile Include="Data\ActionType.cs" />
     <Compile Include="Data\AILevel.cs" />
@@ -50,7 +52,8 @@
     <Compile Include="GameMode.cs" />
     <Compile Include="Interface\IAnalyzer.cs" />
     <Compile Include="LogicControls.cs" />
-    <Compile Include="Player.cs" />
+    <Compile Include="Player\OnlinePlayer.cs" />
+    <Compile Include="Player\Player.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup />

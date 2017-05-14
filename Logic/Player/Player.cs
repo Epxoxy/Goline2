@@ -1,9 +1,5 @@
 ﻿using Logic.Data;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Logic
 {
@@ -12,6 +8,7 @@ namespace Logic
         public string Name { get; set; }
         public string Token { get; internal set; }
         public bool IsActive { get; internal set; }
+        public bool IsAttached { get; internal set; }
         public GameMaster Master { get; internal set; }
         public Stack<DataPoint> Inputs { get; internal set; }
         public Player Front { get; internal set; }
@@ -19,12 +16,8 @@ namespace Logic
 
         public bool Input(DataPoint data)
         {
-            return false;
-        }
-
-        public bool Register(GameMaster master)
-        {
-            return false;
+            if (!IsAttached) return false;
+            return Master.HandInput(Token, new InputAction(ActionType.New, data));
         }
 
         protected void OnRequest()
