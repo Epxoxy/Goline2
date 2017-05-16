@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Logic.Data;
+using GameLogic.Data;
 
-namespace Logic.Analyzer
+namespace GameLogic.Analyzer
 {
     public class AlphaBetaMaxMinAnalyzer : Interface.IAnalyzer<int[,], Point>
     {

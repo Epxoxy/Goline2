@@ -7,8 +7,8 @@
     <ProjectGuid>{2872600F-27A6-4D4B-A6F5-0D997497B61F}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Logic</RootNamespace>
-    <AssemblyName>Logic</AssemblyName>
+    <RootNamespace>GameLogic</RootNamespace>
+    <AssemblyName>LogicController</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -40,7 +40,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Message.cs" />
+    <Compile Include="GameController.cs" />
+    <Compile Include="Network\RemoteClient.cs" />
+    <Compile Include="Player\LocalPlayer.cs" />
     <Compile Include="Player\AIPlayer.cs" />
     <Compile Include="Analyzer\AlphaBetaMaxMinAnalyzer.cs" />
     <Compile Include="Data\ActionType.cs" />
@@ -48,15 +50,20 @@
     <Compile Include="Data\DataPoint.cs" />
     <Compile Include="Data\InputAction.cs" />
     <Compile Include="Data\Point.cs" />
-    <Compile Include="GameMaster.cs" />
+    <Compile Include="MainLogicUnit.cs" />
     <Compile Include="GameMode.cs" />
     <Compile Include="Interface\IAnalyzer.cs" />
     <Compile Include="LogicControls.cs" />
-    <Compile Include="Player\OnlinePlayer.cs" />
+    <Compile Include="Player\RemotePlayer.cs" />
     <Compile Include="Player\Player.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\NetworkService\NetworkService.csproj">
+      <Project>{1AF14B8F-15A7-4125-9F58-D6A2D6AC4A50}</Project>
+      <Name>NetworkService</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

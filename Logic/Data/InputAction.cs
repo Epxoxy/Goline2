@@ -4,8 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Logic.Data
+namespace GameLogic.Data
 {
+    [Serializable]
     public class InputAction
     {
         public ActionType Type { get; set; }
@@ -15,6 +16,11 @@ namespace Logic.Data
         {
             this.Type = type;
             this.Data = data;
+        }
+
+        public override string ToString()
+        {
+            return string.Format("[{0}]:{1}", Type, Data);
         }
     }
 }

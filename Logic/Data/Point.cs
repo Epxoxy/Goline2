@@ -4,8 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Logic.Data
+namespace GameLogic.Data
 {
+    [Serializable]
     public struct Point
     {
         public int X { get; set; }

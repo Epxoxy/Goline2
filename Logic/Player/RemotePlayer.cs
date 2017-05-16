@@ -4,13 +4,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Logic
+namespace GameLogic
 {
-    public class OnlinePlayer : Player
+    public class RemotePlayer : Player
     {
         public string RemoteToken { get; set; }
 
-        public OnlinePlayer(string remoteToken)
+        public RemotePlayer(string remoteToken)
         {
             this.RemoteToken = remoteToken;
         }

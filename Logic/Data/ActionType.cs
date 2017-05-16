@@ -4,13 +4,15 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Logic.Data
+namespace GameLogic.Data
 {
     public enum ActionType
     {
-        New,
+        Join,
+        Leave,
+        Input,
         Undo,
         Redo,
-        Message
+        GiveUp
     }
 }

@@ -55,7 +55,6 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="SerializeExtension.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -97,9 +96,13 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Logic\Logic.csproj">
+    <ProjectReference Include="..\Logic\LogicController.csproj">
       <Project>{2872600F-27A6-4D4B-A6F5-0D997497B61F}</Project>
-      <Name>Logic</Name>
+      <Name>LogicController</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\NetworkService\NetworkService.csproj">
+      <Project>{1AF14B8F-15A7-4125-9F58-D6A2D6AC4A50}</Project>
+      <Name>NetworkService</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

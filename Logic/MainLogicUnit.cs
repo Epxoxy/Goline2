@@ -1,14 +1,24 @@
-﻿using Logic.Data;
-using Logic.Interface;
+﻿using GameLogic.Data;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Logic
+namespace GameLogic
 {
-    public class GameMaster
+    public delegate void AcceptedEventHandler(string token, InputAction action);
+    public delegate void PlayerEventHandler(string token);
+    public delegate void StateChangedEventHandler();
+
+    public class MainLogicUnit
     {
-        public GameMode Mode { get; private set; }
+        public event AcceptedEventHandler Accepted;
+        public event PlayerEventHandler ActivedChanged;
+        public event PlayerEventHandler FirstChanged;
+        public event PlayerEventHandler PlayerJoined;
+        public event PlayerEventHandler PlayerLeave;
+        public event StateChangedEventHandler Started;
+        public event StateChangedEventHandler Ended;
+
         public TimeSpan Elapsed { get; private set; }
 
         public Player First { get; private set; }
@@ -19,14 +29,13 @@ namespace Logic
 
         public bool IsStarted { get; private set; }
         public bool IsAttached { get; private set; }
-        public bool IsOnline { get; private set; }
 
         private Dictionary<string, Player> players { get; set; }
         private Dictionary<string, PlayerData> data { get; set; }
         private LogicControls logics;
         private object lockPlayers = new object();
 
-        public GameMaster(LogicControls logics)
+        public MainLogicUnit(LogicControls logics)
         {
             this.logics = logics;
         }
@@ -55,6 +64,7 @@ namespace Logic
                 players.Add(token, player);
                 player.IsAttached = true;
                 System.Diagnostics.Debug.WriteLine($"Player[{player.Name}] Joined. Token[{token}]");
+                PlayerJoined?.Invoke(token);
 
                 return true;
             }
@@ -74,8 +84,10 @@ namespace Logic
                 front.Next = next;
 
                 System.Diagnostics.Debug.WriteLine($"Player[{player.Name}] Leave.");
+                PlayerLeave?.Invoke(token);
                 return true;
-            }else
+            }
+            else
             {
                 System.Diagnostics.Debug.WriteLine($"Token[{token}] Valid Fail.");
                 return false;
@@ -88,6 +100,7 @@ namespace Logic
                 || !players.ContainsKey(token))
                 return false;
             First = players[token];
+            FirstChanged?.Invoke(token);
             return true;
         }
 
@@ -110,46 +123,67 @@ namespace Logic
 
         public bool Start()
         {
+            if(IsAttached && !IsStarted)
+            {
+                IsStarted = true;
+                Started?.Invoke();
+                return true;
+            }
             return false;
         }
 
         public void End()
         {
-            
+            if (IsStarted)
+            {
+                IsStarted = false;
+                Ended?.Invoke();
+            }
         }
 
         public bool HandInput(string token, InputAction action)
         {
-            if (string.IsNullOrEmpty(token) || !players.ContainsKey(token))
-                return false;
-            return false;
+            bool accepted = false;
+            if(action.Type == ActionType.Leave)
+            {
+
+            }else if(action.Type == ActionType.GiveUp)
+            {
+
+            }else
+            {
+                if (!string.IsNullOrEmpty(token) && players.ContainsKey(token))
+                {
+                    switch (action.Type)
+                    {
+                        case ActionType.Input:
+                        case ActionType.Undo:
+                        case ActionType.Redo:
+                            break;
+                    }
+                }
+            }
+            if(accepted)
+                Accepted?.Invoke(token, action);
+            return accepted;
         }
         
-        private void FillAI(int num, AILevel level)
-        {
-            for (int i = 0; i < num; i++)
-            {
-                var player = makeAIPlayer(level);
-                this.Join(player);
-            }
-        }
-
         private string generateToken()
         {
             return Convert.ToBase64String(Guid.NewGuid().ToByteArray()).TrimEnd('=');
         }
+
+        private void tryActivedNext()
+        {
+            Actived = Actived.Next;
+            ActivedChanged?.Invoke(Actived.Token);
+        }
+
+        private bool isNewWinnerAppend()
+        {
+            return false;
+        }
         
-        private Player makeOnlinePlayer(string token)
-        {
-            return new OnlinePlayer();
-        }
-
-        private Player makeAIPlayer(AILevel level)
-        {
-            return new AIPlayer();
-        }
-
-
         private class PlayerData : IDisposable
         {
             private System.Diagnostics.Stopwatch stopwatch;

@@ -1,7 +1,7 @@
-﻿using Logic.Data;
+﻿using GameLogic.Data;
 using System.Collections.Generic;
 
-namespace Logic
+namespace GameLogic
 {
     public class Player
     {
@@ -9,15 +9,20 @@ namespace Logic
         public string Token { get; internal set; }
         public bool IsActive { get; internal set; }
         public bool IsAttached { get; internal set; }
-        public GameMaster Master { get; internal set; }
+        public MainLogicUnit Master { get; internal set; }
         public Stack<DataPoint> Inputs { get; internal set; }
         public Player Front { get; internal set; }
         public Player Next { get; internal set; }
 
-        public bool Input(DataPoint data)
+        public bool Input(Data.Point data)
         {
             if (!IsAttached) return false;
-            return Master.HandInput(Token, new InputAction(ActionType.New, data));
+            return Master.HandInput(Token, new InputAction(ActionType.Input, data));
+        }
+
+        public virtual bool IsVirtual()
+        {
+            return true;
         }
 
         protected void OnRequest()
@@ -25,7 +30,7 @@ namespace Logic
 
         }
 
-        protected void OnMasterChanging(GameMaster old, GameMaster newOne)
+        protected void OnMasterChanging(MainLogicUnit old, MainLogicUnit newOne)
         {
 
         }

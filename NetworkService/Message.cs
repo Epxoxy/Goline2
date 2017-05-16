@@ -1,8 +1,8 @@
 ﻿using System;
-using System.Runtime.Serialization;
 
-namespace Logic
+namespace NetworkService
 {
+    [Serializable]
     public class Message
     {
         public string Token { get; private set; }
@@ -18,7 +18,7 @@ namespace Logic
             };
         }
 
-        public static Message CreateMessage<T>(string token, T content) where T : ISerializable
+        public static Message CreateMessage<T>(string token, T content)
         {
             return new Message()
             {
@@ -28,7 +28,7 @@ namespace Logic
             };
         }
 
-        public static Message CreateMessage<T>(string token, T content, MessageType type) where T : ISerializable
+        public static Message CreateMessage<T>(string token, T content, MessageType type)
         {
             return new Message()
             {
@@ -47,8 +47,8 @@ namespace Logic
     public enum MessageType
     {
         Heartbeat,
-        Signin,
-        Signout,
+        Action,
+        Fallback,
         Message
     }
 }
