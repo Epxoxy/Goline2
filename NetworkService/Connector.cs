@@ -12,14 +12,27 @@ namespace NetworkService
 {
     public delegate void MessageReceivedEventHandler(Message msg);
     public delegate void HeartbeatEventHandler();
+    public delegate void ConnectStateChangedEventHandler(bool isConnected);
 
     public class Connector
     {
         public event MessageReceivedEventHandler MessageReceived;
         public event HeartbeatEventHandler HeartbeatStarted;
         public event HeartbeatEventHandler HeartbeatFail;
+        public event ConnectStateChangedEventHandler ConnectStateChanged;
 
-        public bool IsConnected { get; private set; }
+        public bool IsConnected
+        {
+            get { return isConnected; }
+            private set
+            {
+                if(isConnected != value)
+                {
+                    isConnected = value;
+                    ConnectStateChanged?.Invoke(isConnected);
+                }
+            }
+        }
         public bool IsListenning { get; private set; }
         public bool IsHeartbeating
         {
@@ -35,6 +48,7 @@ namespace NetworkService
             }
         }
 
+        private bool isConnected;
         private bool isHeartbeating;
         private TcpClient sendClient;
         private TcpListener listener;
@@ -47,6 +61,11 @@ namespace NetworkService
         private string connectToken;
         private System.Timers.Timer beatTimer;
         private int heartbeatMs = 2000;
+
+        public Connector()
+        {
+            this.connectToken = Convert.ToBase64String(Guid.NewGuid().ToByteArray()).TrimEnd('=');
+        }
 
         public bool Connect(string ip, int port)
         {
@@ -78,11 +97,18 @@ namespace NetworkService
                 Task.Run(async () =>
                 {
                     var heartbeat = Message.CreateHeart(connectToken);
+                    int times = 0;
                     while (heartbeatNeed)
                     {
+
                         SendObject(heartbeat);
+                        ++ times;
                         if (heartbeatNeed)
                             await Task.Delay(heartbeatMs);
+                        if(times % 10 == 0)
+                        {
+                            await Task.Delay(heartbeatMs * 3 + 10);
+                        }
                     }
                     IsHeartbeating = false;
                     if (beatTimer != null)
@@ -170,7 +196,7 @@ namespace NetworkService
 
         private void onBeatTestElapsed(object sender, System.Timers.ElapsedEventArgs e)
         {
-            int ms = (lastHeartBeat - DateTime.Now).Milliseconds;
+            double ms = (DateTime.Now - lastHeartBeat).Duration().TotalMilliseconds;
             if (ms > heartbeatMs * 3)
             {
                 HeartbeatFail?.Invoke();
@@ -204,6 +230,8 @@ namespace NetworkService
                 IsListenning = false;
                 listener = null;
                 workerThread.Abort();
+                beatTimer?.Stop();
+                beatTimer = null;
             }
             catch(Exception e)
             {
@@ -216,10 +244,10 @@ namespace NetworkService
             heartbeatNeed = false;
             if (heartbeat != null)
                 heartbeat.Cancel();
-            if (streamToServer != null)
-                streamToServer.Dispose();
             if (sendClient != null)
                 sendClient.Close();
+            if (streamToServer != null)
+                streamToServer.Dispose();
             IsConnected = false;
         }
 

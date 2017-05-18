@@ -23,15 +23,15 @@ namespace GameLogic
 
         public Player First { get; private set; }
         public Player Actived { get; private set; }
-        public Player Next { get; private set; }
-        public Player Front { get; private set; }
         public Player Winner { get; private set; }
+        public Player Next => Actived == null ? null : Actived.Next;
+        public Player Front => Actived == null ? null : Actived.Front;
 
         public bool IsStarted { get; private set; }
         public bool IsAttached { get; private set; }
 
         private Dictionary<string, Player> players { get; set; }
-        private Dictionary<string, PlayerData> data { get; set; }
+        private Dictionary<string, PlayerData> watches { get; set; }
         private LogicControls logics;
         private object lockPlayers = new object();
 
@@ -62,6 +62,7 @@ namespace GameLogic
                     player.Next = first;
                 }
                 players.Add(token, player);
+                watches.Add(token, new PlayerData());
                 player.IsAttached = true;
                 System.Diagnostics.Debug.WriteLine($"Player[{player.Name}] Joined. Token[{token}]");
                 PlayerJoined?.Invoke(token);
@@ -78,6 +79,7 @@ namespace GameLogic
             {
                 var player = players[token];
                 players.Remove(token);
+                watches.Remove(token);
 
                 var front = player.Front;
                 var next = player.Next;
@@ -108,17 +110,17 @@ namespace GameLogic
         {
             IsAttached = true;
             players = new Dictionary<string, Player>();
-            data = new Dictionary<string, PlayerData>();
+            watches = new Dictionary<string, PlayerData>();
         }
 
         public void Detach()
         {
             players.Clear();
-            foreach(var item in data.Values)
+            foreach(var item in watches.Values)
                 item.Dispose();
-            data.Clear();
+            watches.Clear();
             players = null;
-            data = null;
+            watches = null;
         }
 
         public bool Start()
@@ -127,6 +129,7 @@ namespace GameLogic
             {
                 IsStarted = true;
                 Started?.Invoke();
+                tryActive(First);
                 return true;
             }
             return false;
@@ -144,13 +147,15 @@ namespace GameLogic
         public bool HandInput(string token, InputAction action)
         {
             bool accepted = false;
-            if(action.Type == ActionType.Leave)
+            if (action.Type == ActionType.Leave)
             {
 
-            }else if(action.Type == ActionType.GiveUp)
+            }
+            else if (action.Type == ActionType.GiveUp)
             {
 
-            }else
+            }
+            else
             {
                 if (!string.IsNullOrEmpty(token) && players.ContainsKey(token))
                 {
@@ -163,27 +168,34 @@ namespace GameLogic
                     }
                 }
             }
-            if(accepted)
+            if (accepted)
                 Accepted?.Invoke(token, action);
             return accepted;
         }
-        
+
+        private void tryActive(Player player)
+        {
+            if (Actived != null)
+            {
+                Actived.IsActive = false;
+                watches[Actived.Token].PauseStopwatch();
+            }
+            Actived = player;
+            Actived.IsActive = true;
+            watches[Actived.Token].EnsureStopwatch();
+            ActivedChanged?.Invoke(player.Token);
+        }
+
         private string generateToken()
         {
             return Convert.ToBase64String(Guid.NewGuid().ToByteArray()).TrimEnd('=');
         }
-
-        private void tryActivedNext()
-        {
-            Actived = Actived.Next;
-            ActivedChanged?.Invoke(Actived.Token);
-        }
-
+        
         private bool isNewWinnerAppend()
         {
             return false;
         }
-        
+
         private class PlayerData : IDisposable
         {
             private System.Diagnostics.Stopwatch stopwatch;
