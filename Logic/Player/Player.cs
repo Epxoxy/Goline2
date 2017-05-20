@@ -14,7 +14,7 @@ namespace GameLogic
         public Player Front { get; internal set; }
         public Player Next { get; internal set; }
 
-        public bool Input(Data.Point data)
+        public bool Input(Data.IntPoint data)
         {
             if (!IsAttached) return false;
             return Master.HandInput(Token, new InputAction(ActionType.Input, data));

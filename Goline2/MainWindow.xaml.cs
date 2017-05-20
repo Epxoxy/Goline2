@@ -63,8 +63,8 @@ namespace Goline2
 
             GameController controller = new GameController(new LogicControls(2, 2, 24), null);
             controller.Notifier = new ConsoleNotifier();
-            controller.SwitchMode(GameMode.PvPOnline, null);
-
+            controller.SwitchMode(GameMode.PvP, null);
+            
             Player p1 = new Player() { Name = "p1" };
             Player p2 = new Player() { Name = "p2" };
             
@@ -80,12 +80,15 @@ namespace Goline2
                 System.Diagnostics.Debug.WriteLine("start fail.");
 
             Task.Run(async () => {
-                await Task.Delay(5000);
-                controller.SwitchMode(GameMode.PvE, null);
-                await Task.Delay(2000);
-                controller.SwitchMode(GameMode.PvPOnline, null);
-                await Task.Delay(10000);
-                controller.SwitchMode(GameMode.PvE, null);
+                await Task.Delay(1000);
+                if(!p1.Input(new IntPoint(0, 0)))
+                    System.Diagnostics.Debug.WriteLine("p1 input fail.");
+                await Task.Delay(1000);
+                if (!p1.Input(new IntPoint(1, 1)))
+                    System.Diagnostics.Debug.WriteLine("p1 input fail.");
+                await Task.Delay(1000);
+                if (!p2.Input(new IntPoint(1, 0)))
+                    System.Diagnostics.Debug.WriteLine("p2 input fail.");
             });
         }
 

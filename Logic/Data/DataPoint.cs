@@ -24,5 +24,10 @@ namespace GameLogic.Data
             this.Y = y;
             this.Data = data;
         }
+
+        public override string ToString()
+        {
+            return string.Format("{0},{1} [{2}]", X, Y, Data);
+        }
     }
 }

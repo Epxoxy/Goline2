@@ -1,32 +1,12 @@
 ﻿using GameLogic.Data;
+using GameLogic.Interface;
 using NetworkService;
+using System;
 using System.Collections.Generic;
 
 namespace GameLogic
-{
-    public delegate void LatticClickEventHandler(int x, int y);
-
-    public interface IBoard
-    {
-        event LatticClickEventHandler LatticClick;
-        void DrawChess(int x, int y, int color);
-        void RemoveChess(int x, int y);
-    }
-
-    public interface InformationBoad
-    {
-        void ChangedActived(string token);
-        void OnStart();
-        void OnEnded();
-        void OnModeChange();
-    }
-
-    public interface IMessageNotifier
-    {
-        void Notify(string title, string content);
-    }
-    
-    public class GameController
+{   
+    public class GameController : IDisposable
     {
         public GameMode Mode { get; private set; }
         public bool IsOnline { get; private set; }
@@ -40,7 +20,8 @@ namespace GameLogic
         private Connector connector;
         private IBoard board;
         private string connectIp = "127.0.0.1";
-        private int port = 8500;
+        private int connectPort = 8600;
+        private int listenPort = 8500;
 
         public GameController(LogicControls controls, IBoard board)
         {
@@ -125,7 +106,18 @@ namespace GameLogic
         //Start end
         public bool Start()
         {
-            return IsAttached && logicUnit.Start();
+            if (IsAttached)
+            {
+                //When is online mode
+                //It needs ensure network connection
+                if (Mode == GameMode.PvPOnline)
+                {
+                    if (connector == null) return false;
+                    else if (!connector.IsConnected) return false;
+                }
+                return logicUnit.Start();
+            }
+            return false;
         }
 
         public void End()
@@ -133,11 +125,21 @@ namespace GameLogic
             if (IsAttached)
                 logicUnit.End();
         }
+        
+        public void ReadyConnect()
+        {
+            connector.ListenTo(System.Net.IPAddress.Any, listenPort);
+        }
 
+        public void Connect()
+        {
+            connector.Connect(connectIp, connectPort);
+        }
 
         private void onStarted()
         {
             InfoBoad?.OnStart();
+            Notifier?.Notify("Game is started.", DateTime.Now.ToString());
         }
 
         private void onEnded()
@@ -180,10 +182,6 @@ namespace GameLogic
                 if (string.IsNullOrEmpty(connectIp))
                 {
                     Notifier?.Notify("Warning", "Connect IP is not valid.");
-                }else
-                {
-                    connector.ListenTo(System.Net.IPAddress.Any, port);
-                    connector.Connect(connectIp, port);
                 }
             }
             InfoBoad?.OnModeChange();
@@ -197,6 +195,7 @@ namespace GameLogic
 
         private void onRemoteMessageReceived(Message msg)
         {
+            Notifier?.Notify("Message", msg.Type.ToString());
             switch (msg.Type)
             {
                 case MessageType.Message:
@@ -241,7 +240,6 @@ namespace GameLogic
             }
         }
 
-
         private void sendFallback(ActionType type, bool handResult)
         {
             connector.SendMessage(MessageType.Fallback, new object[]
@@ -269,13 +267,14 @@ namespace GameLogic
         private void onBoadLatticClick(int x, int y)
         {
             if (logicUnit.IsStarted && !logicUnit.Actived.IsVirtual())
-                logicUnit.Actived.Input(new Point(x, y));
+                logicUnit.Actived.Input(new IntPoint(x, y));
         }
         
         private void onLogicUnitAccepted(string token, InputAction action)
         {
-            if (!remotePlayers.ContainsKey(token))
+            if (Mode == GameMode.PvPOnline && !remotePlayers.ContainsKey(token))
                 sendRemoteAction(action);
+            else Notifier?.Notify(action.Type.ToString(), action.Data.ToString());
         }
         
         private void onConnectStateChanged(bool isConnected)
@@ -283,6 +282,20 @@ namespace GameLogic
             IsOnline = isConnected;
         }
         
+        public void Dispose()
+        {
+            Confirmer = null;
+            Notifier = null;
+            InfoBoad = null;
+            confirmAction = null;
+            if(connector != null)
+            {
+                connector.Disconnct();
+                connector.StopListen();
+                connector = null;
+            }
+        }
+
         private InputAction confirmAction;
     }
 }

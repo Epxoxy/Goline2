@@ -170,7 +170,7 @@ namespace NetworkService
                 }
                 catch (Exception e)
                 {
-                    Debug.WriteLine(e.Message);
+                    Debug.WriteLine("Connector[listenImpl]" + e.Message);
                     break;
                 }
                 var remoteWrap = new RemoteClient(remoteTcpClient);
@@ -235,7 +235,7 @@ namespace NetworkService
             }
             catch(Exception e)
             {
-                Debug.WriteLine(e.Message);
+                Debug.WriteLine("Connector[StopListen]" + e.Message);
             }
         }
 
@@ -260,6 +260,7 @@ namespace NetworkService
         //Send message
         public bool SendObject<T>(T obj)
         {
+            if (!IsConnected) return false;
             try
             {
                 lock (streamToServer)
@@ -289,7 +290,7 @@ namespace NetworkService
             }
             catch (Exception e)
             {
-                Debug.WriteLine(e.Message);
+                Debug.WriteLine("Connector[SendObject]" + e.Message);
                 return false;
             }
         }

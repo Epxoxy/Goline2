@@ -1,4 +1,5 @@
 ﻿using GameLogic.Data;
+using GameLogic.Interface;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,6 +17,7 @@ namespace GameLogic
         public event PlayerEventHandler FirstChanged;
         public event PlayerEventHandler PlayerJoined;
         public event PlayerEventHandler PlayerLeave;
+        public event PlayerEventHandler WinnerAppend;
         public event StateChangedEventHandler Started;
         public event StateChangedEventHandler Ended;
 
@@ -33,11 +35,13 @@ namespace GameLogic
         private Dictionary<string, Player> players { get; set; }
         private Dictionary<string, PlayerData> watches { get; set; }
         private LogicControls logics;
+        private DataBox dataBox;
         private object lockPlayers = new object();
 
-        public MainLogicUnit(LogicControls logics)
+        public MainLogicUnit(LogicControls lc)
         {
-            this.logics = logics;
+            this.logics = lc;
+            dataBox = new DataBox(lc.Entry, lc.ReachableMark, lc.DeniedMark);
         }
 
         //When gameMaster is attach,you can join a valid player
@@ -62,7 +66,11 @@ namespace GameLogic
                     player.Next = first;
                 }
                 players.Add(token, player);
-                watches.Add(token, new PlayerData());
+                watches.Add(token, new PlayerData()
+                {
+                    BoxId = players.Count + 1
+                });
+                player.Master = this;
                 player.IsAttached = true;
                 System.Diagnostics.Debug.WriteLine($"Player[{player.Name}] Joined. Token[{token}]");
                 PlayerJoined?.Invoke(token);
@@ -75,24 +83,66 @@ namespace GameLogic
         {
             if (string.IsNullOrEmpty(token) || !IsAttached || IsStarted || players.Count < 1)
                 return false;
-            if (players.ContainsKey(token))
+            lock (lockPlayers)
             {
-                var player = players[token];
-                players.Remove(token);
-                watches.Remove(token);
+                if (players.ContainsKey(token))
+                {
+                    var player = players[token];
+                    players.Remove(token);
+                    watches.Remove(token);
+                    player.Master = null;
 
-                var front = player.Front;
-                var next = player.Next;
-                front.Next = next;
+                    var front = player.Front;
+                    var next = player.Next;
+                    front.Next = next;
 
-                System.Diagnostics.Debug.WriteLine($"Player[{player.Name}] Leave.");
-                PlayerLeave?.Invoke(token);
-                return true;
+                    System.Diagnostics.Debug.WriteLine($"Player[{player.Name}] Leave.");
+                    PlayerLeave?.Invoke(token);
+                    return true;
+                }
+                else
+                {
+                    System.Diagnostics.Debug.WriteLine($"Token[{token}] Valid Fail.");
+                    return false;
+                }
             }
-            else
+        }
+
+        public bool GiveUp(string token)
+        {
+            if (string.IsNullOrEmpty(token) || !IsStarted || players.Count < 1) return false;
+            lock (lockPlayers)
             {
-                System.Diagnostics.Debug.WriteLine($"Token[{token}] Valid Fail.");
-                return false;
+                if (players.ContainsKey(token))
+                {
+                    var player = players[token];
+                    if (player.IsActive)
+                    {
+                        var watch = watches[token];
+                        watches.Remove(token);
+                        watch.Dispose();
+                    }
+                    players.Remove(token);
+                    player.Master = null;
+
+                    var front = player.Front;
+                    var next = player.Next;
+                    front.Next = next;
+
+                    if (IsStarted && players.Count == 1)
+                        onWinnerAppend(front.Token);
+                    else
+                        tryActive(next);
+
+                    System.Diagnostics.Debug.WriteLine($"Player[{player.Name}] Leave.");
+                    PlayerLeave?.Invoke(token);
+                    return true;
+                }
+                else
+                {
+                    System.Diagnostics.Debug.WriteLine($"Token[{token}] Valid Fail.");
+                    return false;
+                }
             }
         }
 
@@ -147,30 +197,55 @@ namespace GameLogic
         public bool HandInput(string token, InputAction action)
         {
             bool accepted = false;
-            if (action.Type == ActionType.Leave)
+            if (!string.IsNullOrEmpty(token) && players.ContainsKey(token))
             {
-
-            }
-            else if (action.Type == ActionType.GiveUp)
-            {
-
-            }
-            else
-            {
-                if (!string.IsNullOrEmpty(token) && players.ContainsKey(token))
+                switch (action.Type)
                 {
-                    switch (action.Type)
-                    {
-                        case ActionType.Input:
-                        case ActionType.Undo:
-                        case ActionType.Redo:
-                            break;
-                    }
+                    case ActionType.Leave:
+                        accepted = Leave(token);
+                        break;
+                    case ActionType.GiveUp:
+                        accepted = GiveUp(token);
+                        break;
+                    case ActionType.Input:
+                        accepted = handDataInput(action.Data, watches[token].BoxId);
+                        break;
+                    case ActionType.Undo:
+                        DataPoint p;
+                        accepted = dataBox.Undo(out p);
+                        break;
+                    case ActionType.Redo:
+                        DataPoint rp;
+                        accepted = dataBox.Redo(out rp);
+                        break;
                 }
             }
             if (accepted)
                 Accepted?.Invoke(token, action);
             return accepted;
+        }
+
+
+        private string generateToken()
+        {
+            return Convert.ToBase64String(Guid.NewGuid().ToByteArray()).TrimEnd('=');
+        }
+
+        private bool handDataInput(object data, int mark)
+        {
+            if(data is IntPoint)
+            {
+                var p = (IntPoint)data;
+                return dataBox.Record(p.X, p.Y, mark);
+            }
+            return false;
+        }
+
+        private void onWinnerAppend(string token)
+        {
+            Winner = players[token];
+            if (IsStarted) End();
+            WinnerAppend?.Invoke(token);
         }
 
         private void tryActive(Player player)
@@ -186,11 +261,6 @@ namespace GameLogic
             ActivedChanged?.Invoke(player.Token);
         }
 
-        private string generateToken()
-        {
-            return Convert.ToBase64String(Guid.NewGuid().ToByteArray()).TrimEnd('=');
-        }
-        
         private bool isNewWinnerAppend()
         {
             return false;
@@ -207,6 +277,7 @@ namespace GameLogic
                     return stopwatch.Elapsed;
                 }
             }
+            public int BoxId { get; set; }
 
             public void EnsureStopwatch()
             {

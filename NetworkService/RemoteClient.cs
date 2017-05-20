@@ -46,7 +46,7 @@ namespace NetworkService
                 bufferStream = new MemoryStream();
                 while ((readCount = StreamToClient.Read(buffer, 0, buffer.Length)) > 0)
                 {
-                    Debug.WriteLine("Reading data, " + readCount + " bytes ...");
+                    Debug.WriteLine("[remote " + readCount + " bytes]");
                     bufferStream.Write(buffer, 0, readCount);
                     //client.Available > 0
                     //streamToClient.DataAvailable
@@ -60,7 +60,7 @@ namespace NetworkService
                         switch (msg.Type)
                         {
                             case MessageType.Heartbeat:
-                                Debug.WriteLine("Heartbeat");
+                                Debug.WriteLine("#Heartbeat#");
                                 break;
                         }
                         bufferStream = new MemoryStream();
@@ -70,7 +70,7 @@ namespace NetworkService
             }
             catch (Exception e)
             {
-                Debug.WriteLine("73" + e.Message);
+                Debug.WriteLine(e.Message);
             }
             finally
             {

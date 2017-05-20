@@ -7,11 +7,11 @@ using GameLogic.Data;
 
 namespace GameLogic.Analyzer
 {
-    public class AlphaBetaMaxMinAnalyzer : Interface.IAnalyzer<int[,], Point>
+    public class AlphaBetaMaxMinAnalyzer : Interface.IAnalyzer<int[,], IntPoint>
     {
-        public Point Analysis(int[,] data, int deep)
+        public IntPoint Analysis(int[,] data, int deep)
         {
-            return default(Point);
+            return default(IntPoint);
         }
     }
 }

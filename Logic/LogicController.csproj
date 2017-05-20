@@ -40,17 +40,21 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Data\DataBox.cs" />
     <Compile Include="GameController.cs" />
+    <Compile Include="Interface\IBoard.cs" />
     <Compile Include="Interface\IConfirmer.cs" />
+    <Compile Include="Interface\IMessageNotifier.cs" />
+    <Compile Include="Interface\InformationBoad.cs" />
     <Compile Include="Network\RemoteClient.cs" />
     <Compile Include="Player\LocalPlayer.cs" />
     <Compile Include="Player\AIPlayer.cs" />
     <Compile Include="Analyzer\AlphaBetaMaxMinAnalyzer.cs" />
     <Compile Include="Data\ActionType.cs" />
-    <Compile Include="Data\AILevel.cs" />
+    <Compile Include="Player\AILevel.cs" />
     <Compile Include="Data\DataPoint.cs" />
     <Compile Include="Data\InputAction.cs" />
-    <Compile Include="Data\Point.cs" />
+    <Compile Include="Data\IntPoint.cs" />
     <Compile Include="MainLogicUnit.cs" />
     <Compile Include="GameMode.cs" />
     <Compile Include="Interface\IAnalyzer.cs" />
