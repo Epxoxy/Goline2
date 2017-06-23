@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GameLogic.Interface
+namespace LogicUnit.Interface
 {
-    public interface InformationBoad
+    public interface SenseInfo
     {
         void ChangedActived(string token);
         void OnStart();

@@ -1,18 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace GameLogic.Data
+﻿namespace LogicUnit.Data
 {
     public enum ActionType
     {
+        Ready,
+        First,
         Join,
         Leave,
         Input,
         Undo,
         Redo,
-        GiveUp
+        GiveUp,
+        AskHost
     }
 }

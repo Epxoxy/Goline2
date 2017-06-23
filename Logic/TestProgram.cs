@@ -1,4 +1,6 @@
-﻿using System;
+﻿using LogicUnit.Data;
+using NetworkService;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,11 +8,11 @@ using System.Threading.Tasks;
 
 namespace LogicUnit
 {
-    internal class AIPlayer : Player
+    public class TestProgram
     {
-        public override bool IsVirtual()
+        public static void run()
         {
-            return true;
         }
     }
+    
 }

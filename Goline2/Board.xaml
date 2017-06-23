@@ -1,0 +1,65 @@
+﻿<UserControl x:Class="Goline2.Board"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Goline2"
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300">
+    <UserControl.Resources>
+        <Style x:Key="EllipseStyle" TargetType="{x:Type Ellipse}">
+            <Setter Property="HorizontalAlignment" Value="Left" />
+            <Setter Property="VerticalAlignment" Value="Top" />
+            <Setter Property="RenderTransformOrigin" Value="0.5, 0.5" />
+            <Setter Property="Stroke" Value="White" />
+            <Setter Property="StrokeThickness" Value="2" />
+            <Setter Property="RenderTransform">
+                <Setter.Value>
+                    <ScaleTransform />
+                </Setter.Value>
+            </Setter>
+            <!--<Style.Triggers>
+                <EventTrigger RoutedEvent="Loaded">
+                    <BeginStoryboard Storyboard="{StaticResource LoadedStoryboard}" />
+                </EventTrigger>
+            </Style.Triggers>-->
+        </Style>
+    </UserControl.Resources>
+    <Grid HorizontalAlignment="Left" VerticalAlignment="Top">
+        <Path x:Name="partPath" x:FieldModifier="private" Data="M2,1 H4 M0,3 H2 M4,3 H6 M2,5 H4 M3,0 H0 V6 H3 M3,4 V6 H6 V0 H3 L5,2 V4 L3,6 1,4 L3,2 V0 L1,2 3,4 L5,2 H1 V4 H5 L3,2"
+              RenderOptions.BitmapScalingMode="Fant" 
+              StrokeLineJoin="Round" StrokeThickness="4"
+              Stroke="SkyBlue" Stretch="Fill" Margin="30">
+            <Path.CacheMode>
+                <BitmapCache EnableClearType="True" SnapsToDevicePixels="True" />
+            </Path.CacheMode>
+        </Path>
+        <ItemsControl x:Name="chessRoot" x:FieldModifier="private" Margin="30" ItemContainerStyle="{StaticResource EllipseStyle}">
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <Grid IsItemsHost="True" Margin="2">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition />
+                            <ColumnDefinition />
+                            <ColumnDefinition />
+                            <ColumnDefinition />
+                            <ColumnDefinition />
+                            <ColumnDefinition />
+                            <ColumnDefinition Width="0"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition />
+                            <RowDefinition />
+                            <RowDefinition />
+                            <RowDefinition />
+                            <RowDefinition />
+                            <RowDefinition />
+                            <RowDefinition Height="0"/>
+                        </Grid.RowDefinitions>
+                    </Grid>
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+        </ItemsControl>
+        <Rectangle Fill="Transparent" />
+    </Grid>
+</UserControl>

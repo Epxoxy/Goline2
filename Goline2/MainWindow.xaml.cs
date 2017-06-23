@@ -1,5 +1,5 @@
-﻿using GameLogic;
-using GameLogic.Data;
+﻿using LogicUnit;
+using LogicUnit.Data;
 using NetworkService;
 using System;
 using System.Collections.Generic;
@@ -22,8 +22,9 @@ namespace Goline2
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class MainWindow : Window, IDisposable
     {
+        private GameController controller;
         public MainWindow()
         {
             InitializeComponent();
@@ -61,36 +62,14 @@ namespace Goline2
                 }
             });*/
 
-            GameController controller = new GameController(new LogicControls(2, 2, 24), null);
+            /*Player p1 = new LocalPlayer() { Name = "p1" };
+            controller = new GameController(GameMode.PvP, board, p1);
             controller.Notifier = new ConsoleNotifier();
-            controller.SwitchMode(GameMode.PvP, null);
-            
-            Player p1 = new Player() { Name = "p1" };
-            Player p2 = new Player() { Name = "p2" };
-            
-            if (!controller.IsAttached)
-                controller.Attach();
-            if (!controller.Join(p1))
-                System.Diagnostics.Debug.WriteLine("p1 join fail.");
-            if (!controller.Join(p2))
-                System.Diagnostics.Debug.WriteLine("p2 join fail.");
-            controller.SignAsFirst(p1.Token);
-            controller.SignAsFirst(p2.Token);
-            if (!controller.Start())
-                System.Diagnostics.Debug.WriteLine("start fail.");
 
-            Task.Run(async () => {
-                await Task.Delay(1000);
-                if(!p1.Input(new IntPoint(0, 0)))
-                    System.Diagnostics.Debug.WriteLine("p1 input fail.");
-                await Task.Delay(1000);
-                if (!p1.Input(new IntPoint(1, 1)))
-                    System.Diagnostics.Debug.WriteLine("p1 input fail.");
-                await Task.Delay(1000);
-                if (!p2.Input(new IntPoint(1, 0)))
-                    System.Diagnostics.Debug.WriteLine("p2 input fail.");
-            });
+            if (!controller.IsAttached)
+                controller.Attach();*/
         }
+        private IEnvProxy env;
 
         private void onHeartbeatStarted()
         {
@@ -110,6 +89,39 @@ namespace Goline2
                     System.Diagnostics.Debug.WriteLine("\r\nNew message\r\n" + msg.ToString());
                     break;
             }
+        }
+
+        private void ReadyBtnClick(object sender, RoutedEventArgs e)
+        {
+            if (string.IsNullOrEmpty(port.Text)) return;
+            if (string.IsNullOrEmpty(port2.Text)) return;
+            int inport, outport;
+            if (int.TryParse(port.Text, out inport) &&
+                int.TryParse(port2.Text, out outport))
+            {
+                bool isHost = sender == readyHostBtn;
+                env = EVPEnvProxy.Create(board, AILevel.Elementary);
+                return;
+                if (isHost)
+                    env = OnlineHostEnvProxy.Create(board,  "127.0.0.1", outport, inport);
+                else
+                    env = OnlineEnvProxy.Create(board,  "127.0.0.1", outport, inport);
+            }
+        }
+
+        private void ConnectBtnClick(object sender, RoutedEventArgs e)
+        {
+            env.Ready();
+        }
+
+        private void StartBtnClick(object sender, RoutedEventArgs e)
+        {
+            env.Start();
+        }
+
+        public void Dispose()
+        {
+            throw new NotImplementedException();
         }
     }
 }

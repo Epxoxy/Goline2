@@ -6,11 +6,12 @@ using System.Threading.Tasks;
 
 namespace LogicUnit
 {
-    internal class AIPlayer : Player
+    internal class TokenHelper
     {
-        public override bool IsVirtual()
+        internal static string NewToken()
         {
-            return true;
+            return Convert.ToBase64String(Guid.NewGuid().ToByteArray()).TrimEnd('=');
         }
+
     }
 }

@@ -55,6 +55,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Page Include="Board.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -62,6 +66,9 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Board.xaml.cs">
+      <DependentUpon>Board.xaml</DependentUpon>
     </Compile>
     <Compile Include="ConsoleNotifier.cs" />
     <Compile Include="MainWindow.xaml.cs">
@@ -97,9 +104,9 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Logic\LogicController.csproj">
+    <ProjectReference Include="..\Logic\LogicUnit.csproj">
       <Project>{2872600F-27A6-4D4B-A6F5-0D997497B61F}</Project>
-      <Name>LogicController</Name>
+      <Name>LogicUnit</Name>
     </ProjectReference>
     <ProjectReference Include="..\NetworkService\NetworkService.csproj">
       <Project>{1AF14B8F-15A7-4125-9F58-D6A2D6AC4A50}</Project>

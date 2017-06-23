@@ -5,8 +5,17 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Goline2"
         mc:Ignorable="d"
-        Title="MainWindow" Height="350" Width="525">
+        Title="MainWindow" Height="450" Width="525">
     <Grid>
-        
+        <local:Board x:Name="board" Height="350" Width="350"/>
+
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Bottom">
+            <Button Content="Ready" Margin="4" Padding="12,7" Click="ReadyBtnClick"/>
+            <Button x:Name="readyHostBtn" Content="ReadyHost" Margin="4" Padding="12,7" Click="ReadyBtnClick"/>
+            <TextBox x:Name="port" Width="80" Text="8500" VerticalContentAlignment="Center"/>
+            <TextBox x:Name="port2" Width="80" Text="8500" VerticalContentAlignment="Center"/>
+            <Button Content="Connect" Margin="4" Padding="12,7" Click="ConnectBtnClick"/>
+            <Button Content="Start" Margin="4" Padding="12,7" Click="StartBtnClick"/>
+        </StackPanel>
     </Grid>
 </Window>

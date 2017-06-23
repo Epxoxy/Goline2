@@ -1,25 +1,16 @@
-﻿using GameLogic.Data;
-using GameLogic.Interface;
+﻿using LogicUnit.Data;
+using LogicUnit.Interface;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace GameLogic
+namespace LogicUnit
 {
-    public delegate void AcceptedEventHandler(string token, InputAction action);
-    public delegate void PlayerEventHandler(string token);
-    public delegate void StateChangedEventHandler();
+    public delegate void JudgeEventHandler(string token, JudgeCode code, object extra = null);
 
-    public class MainLogicUnit
+    public class JudgeUnit
     {
-        public event AcceptedEventHandler Accepted;
-        public event PlayerEventHandler ActivedChanged;
-        public event PlayerEventHandler FirstChanged;
-        public event PlayerEventHandler PlayerJoined;
-        public event PlayerEventHandler PlayerLeave;
-        public event PlayerEventHandler WinnerAppend;
-        public event StateChangedEventHandler Started;
-        public event StateChangedEventHandler Ended;
+        public event JudgeEventHandler OnJudged;
 
         public TimeSpan Elapsed { get; private set; }
 
@@ -33,15 +24,20 @@ namespace GameLogic
         public bool IsAttached { get; private set; }
 
         private Dictionary<string, Player> players { get; set; }
-        private Dictionary<string, PlayerData> watches { get; set; }
-        private LogicControls logics;
+        private Dictionary<string, PlayerExtra> extras { get; set; }
+        private Restriction restriction;
         private DataBox dataBox;
-        private object lockPlayers = new object();
+        private object lockHelper = new object();
 
-        public MainLogicUnit(LogicControls lc)
+        public JudgeUnit(Restriction rst)
         {
-            this.logics = lc;
-            dataBox = new DataBox(lc.Entry, lc.ReachableMark, lc.DeniedMark);
+            this.restriction = rst;
+            dataBox = new DataBox(rst.EntryCopy(), rst.Allow, rst.NotAllow);
+        }
+
+        public IMap GetMap()
+        {
+            return restriction;
         }
 
         //When gameMaster is attach,you can join a valid player
@@ -50,11 +46,11 @@ namespace GameLogic
         {
             if (player == null || !IsAttached || IsStarted)
                 return false;
-            lock (lockPlayers)
+            lock (lockHelper)
             {
                 if (players.ContainsValue(player)) return true;
-                if (players.Count >= logics.MaxPlayer) return false;
-                string token = generateToken();
+                if (players.Count >= restriction.MaxPlayer) return false;
+                string token = TokenHelper.NewToken();
                 player.Token = token;
 
                 if (players.Count > 0)
@@ -66,14 +62,16 @@ namespace GameLogic
                     player.Next = first;
                 }
                 players.Add(token, player);
-                watches.Add(token, new PlayerData()
+                extras.Add(token, new PlayerExtra()
                 {
                     BoxId = players.Count + 1
                 });
-                player.Master = this;
+                player.Judge = this;
                 player.IsAttached = true;
                 System.Diagnostics.Debug.WriteLine($"Player[{player.Name}] Joined. Token[{token}]");
-                PlayerJoined?.Invoke(token);
+                raiseJudged(token, JudgeCode.Joined);
+                if (players.Count == 1)
+                    SignAsFirst(player.Token);
 
                 return true;
             }
@@ -83,21 +81,21 @@ namespace GameLogic
         {
             if (string.IsNullOrEmpty(token) || !IsAttached || IsStarted || players.Count < 1)
                 return false;
-            lock (lockPlayers)
+            lock (lockHelper)
             {
                 if (players.ContainsKey(token))
                 {
                     var player = players[token];
                     players.Remove(token);
-                    watches.Remove(token);
-                    player.Master = null;
+                    extras.Remove(token);
+                    player.Judge = null;
 
                     var front = player.Front;
                     var next = player.Next;
                     front.Next = next;
 
                     System.Diagnostics.Debug.WriteLine($"Player[{player.Name}] Leave.");
-                    PlayerLeave?.Invoke(token);
+                    raiseJudged(token, JudgeCode.Leave);
                     return true;
                 }
                 else
@@ -111,19 +109,19 @@ namespace GameLogic
         public bool GiveUp(string token)
         {
             if (string.IsNullOrEmpty(token) || !IsStarted || players.Count < 1) return false;
-            lock (lockPlayers)
+            lock (lockHelper)
             {
                 if (players.ContainsKey(token))
                 {
                     var player = players[token];
                     if (player.IsActive)
                     {
-                        var watch = watches[token];
-                        watches.Remove(token);
+                        var watch = extras[token];
+                        extras.Remove(token);
                         watch.Dispose();
                     }
                     players.Remove(token);
-                    player.Master = null;
+                    player.Judge = null;
 
                     var front = player.Front;
                     var next = player.Next;
@@ -135,7 +133,7 @@ namespace GameLogic
                         tryActive(next);
 
                     System.Diagnostics.Debug.WriteLine($"Player[{player.Name}] Leave.");
-                    PlayerLeave?.Invoke(token);
+                    raiseJudged(token, JudgeCode.GiveUp);
                     return true;
                 }
                 else
@@ -152,7 +150,7 @@ namespace GameLogic
                 || !players.ContainsKey(token))
                 return false;
             First = players[token];
-            FirstChanged?.Invoke(token);
+            raiseJudged(token, JudgeCode.MarkFirst);
             return true;
         }
 
@@ -160,27 +158,49 @@ namespace GameLogic
         {
             IsAttached = true;
             players = new Dictionary<string, Player>();
-            watches = new Dictionary<string, PlayerData>();
+            extras = new Dictionary<string, PlayerExtra>();
         }
 
         public void Detach()
         {
             players.Clear();
-            foreach(var item in watches.Values)
-                item.Dispose();
-            watches.Clear();
+            foreach(var ex in extras.Values)
+                ex.Dispose();
+            extras.Clear();
             players = null;
-            watches = null;
+            extras = null;
+        }
+        
+        public bool Ready(string token)
+        {
+            if (string.IsNullOrEmpty(token) || !IsAttached || IsStarted || players.Count < 1)
+                return false;
+            if (extras.ContainsKey(token))
+            {
+                if (!extras[token].IsReady)
+                {
+                    extras[token].IsReady = true;
+                    raiseJudged(token, JudgeCode.Ready);
+                    if (extras.Count >= restriction.MinPlayer 
+                        && extras.Count(ex => ex.Value.IsReady) == extras.Count)
+                        Start();
+                }
+                return true;
+            }
+            return false;
         }
 
         public bool Start()
         {
-            if(IsAttached && !IsStarted)
+            if(IsAttached && !IsStarted && players.Count >= restriction.MinPlayer)
             {
-                IsStarted = true;
-                Started?.Invoke();
-                tryActive(First);
-                return true;
+                if (extras.Count(ex => ex.Value.IsReady) == extras.Count)
+                {
+                    IsStarted = true;
+                    raiseJudged(string.Empty, JudgeCode.Started);
+                    tryActive(First);
+                    return true;
+                }
             }
             return false;
         }
@@ -190,48 +210,85 @@ namespace GameLogic
             if (IsStarted)
             {
                 IsStarted = false;
-                Ended?.Invoke();
+                foreach (var ex in extras.Values)
+                    ex.Dispose();
+                raiseJudged(string.Empty, JudgeCode.Ended);
             }
         }
 
         public bool HandInput(string token, InputAction action)
         {
-            bool accepted = false;
-            if (!string.IsNullOrEmpty(token) && players.ContainsKey(token))
+            bool isOk = false;
+            lock (lockHelper)
             {
-                switch (action.Type)
+                if (!string.IsNullOrEmpty(token) && players.ContainsKey(token))
                 {
-                    case ActionType.Leave:
-                        accepted = Leave(token);
-                        break;
-                    case ActionType.GiveUp:
-                        accepted = GiveUp(token);
-                        break;
-                    case ActionType.Input:
-                        accepted = handDataInput(action.Data, watches[token].BoxId);
-                        break;
-                    case ActionType.Undo:
-                        DataPoint p;
-                        accepted = dataBox.Undo(out p);
-                        break;
-                    case ActionType.Redo:
-                        DataPoint rp;
-                        accepted = dataBox.Redo(out rp);
-                        break;
+                    switch (action.Type)
+                    {
+                        case ActionType.First:
+                            isOk = SignAsFirst(token);
+                            break;
+                        case ActionType.Leave:
+                            isOk = Leave(token);
+                            break;
+                        case ActionType.GiveUp:
+                            isOk = GiveUp(token);
+                            break;
+                        case ActionType.Ready:
+                            isOk = Ready(token);
+                            break;
+                        case ActionType.Input:
+                            if (IsStarted && Actived.Token == token)
+                            {
+                                isOk = inputToBox(action.Data, extras[token].BoxId);
+                                if (isOk)
+                                {
+                                    raiseJudged(token, JudgeCode.Inputed, action);
+                                    if (isEnded()) End();
+                                    else tryActive(players[token].Next);
+                                }
+                            }
+                            break;
+                        case ActionType.Undo:
+                            DataPoint p;
+                            isOk = dataBox.Undo(out p);
+                            break;
+                        case ActionType.Redo:
+                            //Not support now
+                            //DataPoint rp;
+                            //accepted = dataBox.Redo(out rp);
+                            break;
+                    }
                 }
             }
-            if (accepted)
-                Accepted?.Invoke(token, action);
-            return accepted;
+            return isOk;
         }
 
-
-        private string generateToken()
+        internal int GetBoxId(string token)
         {
-            return Convert.ToBase64String(Guid.NewGuid().ToByteArray()).TrimEnd('=');
+            if (extras.ContainsKey(token))
+            {
+                return extras[token].BoxId;
+            }
+            return -1;
         }
 
-        private bool handDataInput(object data, int mark)
+        internal int[,] CurrentData()
+        {
+            return dataBox.Copy();
+        }
+
+        private bool isEnded()
+        {
+            return dataBox.ReachableCount == 0;
+        }
+
+        private void raiseJudged(string token, JudgeCode code, object extra = null)
+        {
+            OnJudged?.Invoke(token, code, extra);
+        }
+
+        private bool inputToBox(object data, int mark)
         {
             if(data is IntPoint)
             {
@@ -245,7 +302,7 @@ namespace GameLogic
         {
             Winner = players[token];
             if (IsStarted) End();
-            WinnerAppend?.Invoke(token);
+            raiseJudged(token, JudgeCode.NewWinner);
         }
 
         private void tryActive(Player player)
@@ -253,12 +310,12 @@ namespace GameLogic
             if (Actived != null)
             {
                 Actived.IsActive = false;
-                watches[Actived.Token].PauseStopwatch();
+                extras[Actived.Token].PauseStopwatch();
             }
             Actived = player;
             Actived.IsActive = true;
-            watches[Actived.Token].EnsureStopwatch();
-            ActivedChanged?.Invoke(player.Token);
+            extras[Actived.Token].EnsureStopwatch();
+            raiseJudged(player.Token, JudgeCode.Actived);
         }
 
         private bool isNewWinnerAppend()
@@ -266,9 +323,11 @@ namespace GameLogic
             return false;
         }
 
-        private class PlayerData : IDisposable
+        private class PlayerExtra : IDisposable
         {
             private System.Diagnostics.Stopwatch stopwatch;
+            internal int BoxId { get; set; }
+            internal bool IsReady { get; set; }
             public TimeSpan TimeSpan
             {
                 get
@@ -277,7 +336,6 @@ namespace GameLogic
                     return stopwatch.Elapsed;
                 }
             }
-            public int BoxId { get; set; }
 
             public void EnsureStopwatch()
             {
@@ -309,8 +367,24 @@ namespace GameLogic
 
             public void Dispose()
             {
+                IsReady = false;
                 ClearStopwatch();
             }
         }
+
+    }
+    public enum JudgeCode
+    {
+        Joined,
+        Leave,
+        GiveUp,
+        Ready,
+        MarkFirst,
+        Actived,
+        Accepted,
+        Inputed,
+        NewWinner,
+        Started,
+        Ended
     }
 }

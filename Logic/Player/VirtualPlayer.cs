@@ -6,8 +6,15 @@ using System.Threading.Tasks;
 
 namespace LogicUnit
 {
-    internal class AIPlayer : Player
+    public class VirtualPlayer : Player
     {
+        public string OriginToken { get; set; }
+
+        public VirtualPlayer(string originToken)
+        {
+            this.OriginToken = originToken;
+        }
+
         public override bool IsVirtual()
         {
             return true;

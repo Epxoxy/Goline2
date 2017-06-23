@@ -48,6 +48,7 @@ namespace NetworkService
     {
         Heartbeat,
         Action,
+        Judge,
         Fallback,
         Message
     }

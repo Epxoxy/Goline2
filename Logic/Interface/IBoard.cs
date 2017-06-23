@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GameLogic.Interface
+namespace LogicUnit.Interface
 {
     public delegate void LatticClickEventHandler(int x, int y);
     public interface IBoard

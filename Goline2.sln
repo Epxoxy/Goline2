@@ -5,7 +5,7 @@ VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Goline2", "Goline2\Goline2.csproj", "{C6A63BDE-C4EB-4C71-BB04-4367759BA19C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LogicController", "Logic\LogicController.csproj", "{2872600F-27A6-4D4B-A6F5-0D997497B61F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LogicUnit", "Logic\LogicUnit.csproj", "{2872600F-27A6-4D4B-A6F5-0D997497B61F}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetworkService", "NetworkService\NetworkService.csproj", "{1AF14B8F-15A7-4125-9F58-D6A2D6AC4A50}"
 EndProject

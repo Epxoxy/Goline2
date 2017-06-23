@@ -20,6 +20,7 @@ namespace NetworkService
         public event HeartbeatEventHandler HeartbeatStarted;
         public event HeartbeatEventHandler HeartbeatFail;
         public event ConnectStateChangedEventHandler ConnectStateChanged;
+        public event ConnectStateChangedEventHandler ConnectionReady;
 
         public bool IsConnected
         {
@@ -30,6 +31,19 @@ namespace NetworkService
                 {
                     isConnected = value;
                     ConnectStateChanged?.Invoke(isConnected);
+                }
+            }
+        }
+        public bool IsConnectionReady
+        {
+            get { return isConnectionReady; }
+            private set
+            {
+                if (isConnectionReady != value)
+                {
+                    isConnectionReady = value;
+                    if(isConnectionReady)
+                        ConnectionReady?.Invoke(isConnected);
                 }
             }
         }
@@ -49,6 +63,7 @@ namespace NetworkService
         }
 
         private bool isConnected;
+        private bool isConnectionReady;
         private bool isHeartbeating;
         private TcpClient sendClient;
         private TcpListener listener;
@@ -65,6 +80,11 @@ namespace NetworkService
         public Connector()
         {
             this.connectToken = Convert.ToBase64String(Guid.NewGuid().ToByteArray()).TrimEnd('=');
+        }
+
+        public Connector(string token)
+        {
+            this.connectToken = token;
         }
 
         public bool Connect(string ip, int port)
@@ -92,7 +112,8 @@ namespace NetworkService
                 sendClient = new TcpClient();
                 sendClient.Connect(ip, port);
                 streamToServer = sendClient.GetStream();
-                heartbeatNeed = true;
+                IsConnectionReady = true;
+                heartbeatNeed = false;
                 heartbeat = new CancellationTokenSource();
                 Task.Run(async () =>
                 {
@@ -127,7 +148,23 @@ namespace NetworkService
             catch (Exception e)
             {
                 Debug.WriteLine(e.Message);
+                IsConnected = false;
+                IsConnectionReady = false;
                 return false;
+            }
+        }
+
+        public void ListenTo(string ip, int port)
+        {
+            IPAddress ipAddress;
+            try
+            {
+                ipAddress = IPAddress.Parse(ip);
+                Connect(ipAddress, port);
+            }
+            catch(Exception e)
+            {
+                System.Diagnostics.Debug.WriteLine(e.Message);
             }
         }
 
@@ -249,6 +286,7 @@ namespace NetworkService
             if (streamToServer != null)
                 streamToServer.Dispose();
             IsConnected = false;
+            IsConnectionReady = false;
         }
 
 

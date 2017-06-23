@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Goline2
 {
-    class ConsoleNotifier : GameLogic.Interface.IMessageNotifier
+    class ConsoleNotifier : LogicUnit.Interface.IMessageNotifier
     {
         public void Notify(string title, string content)
         {

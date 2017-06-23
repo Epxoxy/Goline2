@@ -1,19 +1,18 @@
-﻿using GameLogic.Data;
+﻿using LogicUnit.Data;
 using System.Collections.Generic;
 
-namespace GameLogic
+namespace LogicUnit
 {
     public class DataBox
     {
-        private const int UNREACHABLE = 99;
-        private const int REACHABLE = 1;
-
         public int ReachableCount { get; private set; }
         public bool Recordable => ReachableCount > 0;
         public bool CanUndo => undoList.Count > 0;
         public bool CanRedo => redoList.Count > 0;
 
-        private int[,] entry;
+        private int no = 99;
+        private int ok = 1;
+        private int[,] datas;
         private int[,] fixEntry;
         private Dictionary<int, int> stepCountor;
         private Stack<DataPoint> undoList;
@@ -23,22 +22,29 @@ namespace GameLogic
         {
             fixEntry = new int[entry.GetLength(0), entry.GetLength(1)];
 
+            ok = reachable;
+            no = denied;
             for (int i = 0; i < entry.GetLength(0); i++)
                 for (int j = 0; j < entry.GetLength(1); j++)
-                    fixEntry[i, j] = entry[i, j] == reachable ? REACHABLE : UNREACHABLE;
+                    fixEntry[i, j] = entry[i, j];
 
             initilize();
         }
 
-
+        //For check if a point(x, y) can place
+        //by the point(x, y) is reachable
+        //In 2d array, different to screen coordinate
+        //the screen's x coordinate means the 1d of array
+        //then screen's y coordinate means then 0d of array
+        //so when we check it, notice the different just for the 2d array.
         public bool IsValid(int x, int y, int data)
         {
-           return Recordable 
-                && x < entry.GetLength(0) 
-                && y < entry.GetLength(1)
-                && entry[x, y] == REACHABLE
-                && data < UNREACHABLE
-                && data > REACHABLE;
+           return Recordable
+                && x < datas.GetLength(0) 
+                && y < datas.GetLength(1)
+                && datas[x, y] == ok
+                && data != no
+                && data > ok;
         }
 
         //Record data if it's valid
@@ -57,14 +63,14 @@ namespace GameLogic
         //Reset a recorded point to default value
         public bool Reset(int x, int y)
         {
-            if(x< entry.GetLength(0) && y < entry.GetLength(1))
+            if(x< datas.GetLength(1) && y < datas.GetLength(0))
             {
-                int data = entry[x, y];
-                if(data > REACHABLE && data < UNREACHABLE)
+                int data = datas[x, y];
+                if(data > ok && data < no)
                 {
                     --ReachableCount;
                     --stepCountor[data];
-                    entry[x, y] = REACHABLE;
+                    datas[x, y] = ok;
                     return true;
                 }
             }
@@ -124,29 +130,10 @@ namespace GameLogic
         {
             initilize();
         }
-
-
-        private int[,] copy(int[,] src)
+        
+        internal int[,] Copy()
         {
-            int[,] copy = new int[src.GetLength(0), src.GetLength(1)];
-            for (int i = 0; i < src.GetLength(0); i++)
-                for (int j = 0; j < src.GetLength(1); j++)
-                    copy[i, j] = src[i, j];
-            return copy;
-        }
-
-        private void initilize()
-        {
-            ReachableCount = 0;
-            entry = copy(fixEntry);
-            stepCountor = new Dictionary<int, int>();
-            undoList = new Stack<DataPoint>();
-            redoList = new Stack<DataPoint>();
-
-            for (int i = 0; i < entry.GetLength(0); i++)
-                for (int j = 0; j < entry.GetLength(0); j++)
-                    if (entry[i, j] == REACHABLE)
-                        ++ReachableCount;
+            return ArrayHelper.CopyMatrix(datas);
         }
 
         private bool recordInternal(int x, int y, int data)
@@ -154,7 +141,7 @@ namespace GameLogic
             //Check if data valid
             if (IsValid(x, y, data))
             {
-                entry[x, y] = data;
+                datas[x, y] = data;
                 --ReachableCount;
 
                 if (!stepCountor.ContainsKey(data))
@@ -166,5 +153,20 @@ namespace GameLogic
             }
             return false;
         }
+
+        private void initilize()
+        {
+            ReachableCount = 0;
+            datas = ArrayHelper.CopyMatrix(fixEntry);
+            stepCountor = new Dictionary<int, int>();
+            undoList = new Stack<DataPoint>();
+            redoList = new Stack<DataPoint>();
+
+            for (int i = 0; i < datas.GetLength(0); i++)
+                for (int j = 0; j < datas.GetLength(1); j++)
+                    if (datas[i, j] == ok)
+                        ++ReachableCount;
+        }
+
     }
 }
