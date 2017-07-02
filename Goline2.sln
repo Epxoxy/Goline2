@@ -9,7 +9,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SqlServices", "SqlServices\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LogicUnit", "Logic\LogicUnit.csproj", "{2872600F-27A6-4D4B-A6F5-0D997497B61F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GoLine", "GoLine\GoLine.csproj", "{C3FAB1AF-D824-4932-A985-B5520489FB2F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GoLine2", "GoLine2\GoLine2.csproj", "{C3FAB1AF-D824-4932-A985-B5520489FB2F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
