@@ -1,0 +1,135 @@
+﻿<UserControl x:Class="GoLine.Chessboard"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:sys="clr-namespace:System;assembly=mscorlib"
+             xmlns:local="clr-namespace:GoLine"
+             mc:Ignorable="d"
+             d:DesignHeight="360" d:DesignWidth="360" Style="{DynamicResource UserControlStyle}">
+    <UserControl.Resources>
+        <Style x:Key="UserControlStyle" TargetType="{x:Type UserControl}">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type UserControl}">
+                        <Border BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}" SnapsToDevicePixels="true">
+                            <ContentPresenter SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <CubicEase x:Key="CubicEase" EasingMode="EaseOut" />
+        <Storyboard x:Key="LoadedStoryboard" RenderOptions.BitmapScalingMode="LowQuality">
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleX)">
+                <DiscreteDoubleKeyFrame KeyTime="0:0:0" Value="2"/>
+                <EasingDoubleKeyFrame KeyTime="0:0:0.2" EasingFunction="{StaticResource CubicEase}" Value="1"/>
+            </DoubleAnimationUsingKeyFrames>
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleY)">
+                <DiscreteDoubleKeyFrame KeyTime="0:0:0" Value="2"/>
+                <EasingDoubleKeyFrame KeyTime="0:0:0.2" EasingFunction="{StaticResource CubicEase}" Value="1"/>
+            </DoubleAnimationUsingKeyFrames>
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="Opacity">
+                <DiscreteDoubleKeyFrame KeyTime="0:0:0" Value="0"/>
+                <EasingDoubleKeyFrame KeyTime="0:0:0.2" EasingFunction="{StaticResource CubicEase}" Value="1"/>
+            </DoubleAnimationUsingKeyFrames>
+        </Storyboard>
+        <Storyboard x:Key="SpangleStoryboard" RenderOptions.BitmapScalingMode="LowQuality" RepeatBehavior="2">
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="Opacity">
+                <DiscreteDoubleKeyFrame KeyTime="0:0:0" Value="0"/>
+                <EasingDoubleKeyFrame KeyTime="0:0:1" EasingFunction="{StaticResource CubicEase}" Value="0.8"/>
+                <EasingDoubleKeyFrame KeyTime="0:0:2" EasingFunction="{StaticResource CubicEase}" Value="0"/>
+            </DoubleAnimationUsingKeyFrames>
+        </Storyboard>
+        <Storyboard x:Key="DelayInStoryboard" RenderOptions.BitmapScalingMode="LowQuality">
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="Opacity">
+                <DiscreteDoubleKeyFrame KeyTime="0:0:0" Value="0"/>
+                <EasingDoubleKeyFrame KeyTime="0:0:0.6" Value="1"/>
+            </DoubleAnimationUsingKeyFrames>
+        </Storyboard>
+        <Storyboard x:Key="RemovingStoryboard" RenderOptions.BitmapScalingMode="LowQuality">
+            <DoubleAnimation Duration="0:0:0.2" To="2" EasingFunction="{StaticResource CubicEase}" 
+                             Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleX)"/>
+            <DoubleAnimation Duration="0:0:0.2" To="2" EasingFunction="{StaticResource CubicEase}" 
+                             Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleY)"/>
+            <DoubleAnimation Duration="0:0:0.2" To="0" EasingFunction="{StaticResource CubicEase}" 
+                             Storyboard.TargetProperty="Opacity"/>
+        </Storyboard>
+        <Storyboard x:Key="ScaleStoryboard" RenderOptions.BitmapScalingMode="LowQuality">
+            <Storyboard BeginTime="0:0:0" RenderOptions.BitmapScalingMode="LowQuality">
+                <DoubleAnimation Duration="0:0:0.6" To="1.5" EasingFunction="{StaticResource CubicEase}" 
+                             Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleX)"/>
+                <DoubleAnimation Duration="0:0:0.6" To="1.5" EasingFunction="{StaticResource CubicEase}" 
+                             Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleY)"/>
+                <DoubleAnimation Duration="0:0:0.6" To="0.5" EasingFunction="{StaticResource CubicEase}" 
+                             Storyboard.TargetProperty="Opacity"/>
+            </Storyboard>
+            <Storyboard BeginTime="0:0:0.6" RenderOptions.BitmapScalingMode="LowQuality">
+                <DoubleAnimation Duration="0:0:0.6" To="1" EasingFunction="{StaticResource CubicEase}" 
+                             Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleX)"/>
+                <DoubleAnimation Duration="0:0:0.6" To="1" EasingFunction="{StaticResource CubicEase}" 
+                             Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleY)"/>
+                <DoubleAnimation Duration="0:0:0.6" To="1" EasingFunction="{StaticResource CubicEase}" 
+                             Storyboard.TargetProperty="Opacity"/>
+            </Storyboard>
+        </Storyboard>
+        <Style x:Key="EllipseStyle" TargetType="{x:Type Ellipse}">
+            <Setter Property="HorizontalAlignment" Value="Left" />
+            <Setter Property="VerticalAlignment" Value="Top" />
+            <Setter Property="RenderTransformOrigin" Value="0.5, 0.5" />
+            <Setter Property="Stroke" Value="White" />
+            <Setter Property="StrokeThickness" Value="2" />
+            <Setter Property="RenderTransform">
+                <Setter.Value>
+                    <ScaleTransform />
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <EventTrigger RoutedEvent="Loaded">
+                    <BeginStoryboard Storyboard="{StaticResource LoadedStoryboard}" />
+                </EventTrigger>
+            </Style.Triggers>
+        </Style>
+    </UserControl.Resources>
+    <Grid HorizontalAlignment="Left" VerticalAlignment="Top">
+        <!--<i:Interaction.Behaviors>
+            <local:SquareSizeBehavior />
+        </i:Interaction.Behaviors>-->
+        <Path x:Name="Path" x:FieldModifier="private" Data="M2,1 H4 M0,3 H2 M4,3 H6 M2,5 H4 M3,0 H0 V6 H3 M3,4 V6 H6 V0 H3 L5,2 V4 L3,6 1,4 L3,2 V0 L1,2 3,4 L5,2 H1 V4 H5 L3,2"
+              RenderOptions.BitmapScalingMode="Fant" 
+              StrokeLineJoin="Round" StrokeThickness="4"
+              Stroke="SkyBlue" Stretch="Fill" Margin="30">
+            <Path.CacheMode>
+                <BitmapCache EnableClearType="True" SnapsToDevicePixels="True" />
+            </Path.CacheMode>
+        </Path>
+        <ItemsControl x:Name="ChessLayer" x:FieldModifier="private" Margin="30" ItemContainerStyle="{StaticResource EllipseStyle}">
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <Grid IsItemsHost="True" Margin="2">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition />
+                            <ColumnDefinition />
+                            <ColumnDefinition />
+                            <ColumnDefinition />
+                            <ColumnDefinition />
+                            <ColumnDefinition />
+                            <ColumnDefinition Width="0"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition />
+                            <RowDefinition />
+                            <RowDefinition />
+                            <RowDefinition />
+                            <RowDefinition />
+                            <RowDefinition />
+                            <RowDefinition Height="0"/>
+                        </Grid.RowDefinitions>
+                    </Grid>
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+        </ItemsControl>
+        <Rectangle Fill="Transparent" />
+    </Grid>
+</UserControl>

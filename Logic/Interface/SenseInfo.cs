@@ -8,7 +8,7 @@ namespace LogicUnit.Interface
 {
     public interface SenseInfo
     {
-        void ChangedActived(string token);
+        void ChangedActive(string token);
         void OnStart();
         void OnEnded();
         void OnModeChange();

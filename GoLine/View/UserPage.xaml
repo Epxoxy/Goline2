@@ -1,0 +1,218 @@
+﻿<Page x:Class="GoLine.UserPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity" 
+      xmlns:ei="http://schemas.microsoft.com/expression/2010/interactions"
+      xmlns:props="clr-namespace:GoLine.Properties"
+      xmlns:controls="http://Epxcontrols.org"
+      xmlns:local="clr-namespace:GoLine"
+      mc:Ignorable="d" Background="White"
+      d:DesignHeight="600" d:DesignWidth="400"
+      Title="UserPage">
+    <Page.Resources>
+        <SolidColorBrush x:Key="5eb483" Color="#5eb483"/>
+        <SolidColorBrush x:Key="Tran5eb483" Color="#3aa568"/>
+    </Page.Resources>
+    <Grid MinWidth="300">
+        <ScrollViewer x:Name="AccountPart" Visibility="Collapsed" ScrollViewer.CanContentScroll="False"
+                      HorizontalScrollBarVisibility="Disabled"
+                      VerticalScrollBarVisibility="Hidden">
+            <ItemsControl >
+                <ItemsControl Background="{StaticResource 5eb483}">
+                    <Grid HorizontalAlignment="Center" Margin="0,7">
+                        <Ellipse Height="86" Width="86" Fill="White" Stroke="{StaticResource Tran5eb483}" StrokeThickness="4"/>
+                        <!--#region xe6b6-->
+                        <TextBlock Text="&#xe608;" FontFamily="{StaticResource IconFont}" FontSize="50"
+                           HorizontalAlignment="Center" Foreground="Gray" VerticalAlignment="Center"/>
+                    </Grid>
+                    <Button x:Name="NameBtn" HorizontalAlignment="Center" Margin="0,7"
+                    Style="{StaticResource ChagedForegroundButton}">
+                        <Grid>
+                            <TextBlock HorizontalAlignment="Center">
+                    <Run Text="{Binding NickName, FallbackValue='NickName'}" FontSize="18" />
+                            </TextBlock>
+                            <TextBlock HorizontalAlignment="Center" Margin="0,7,0,0">
+                    <Run Text="&#13;(" />
+                    <Run Text="{Binding UserName, FallbackValue='UserName'}" />
+                    <Run Text=")" />
+                            </TextBlock>
+                        </Grid>
+                    </Button>
+                </ItemsControl>
+                <ItemsControl DataContext="{Binding Score}" Padding="16,7" ItemContainerStyle="{StaticResource HeaderControlStyle}">
+                    <HeaderedContentControl Header="{x:Static props:Resources.Win}" Margin="0,7">
+                        <TextBlock Margin="0,7" Text="{Binding Win, FallbackValue='0'}"/>
+                    </HeaderedContentControl>
+                    <HeaderedContentControl Header="{x:Static props:Resources.Fail}" Margin="0,7">
+                        <TextBlock Margin="0,7" Text="{Binding Fail}"/>
+                    </HeaderedContentControl>
+                    <HeaderedContentControl Header="{x:Static props:Resources.Drawn}" Margin="0,7">
+                        <TextBlock Margin="0,7" Text="{Binding Drawn}"/>
+                    </HeaderedContentControl>
+                    <HeaderedContentControl Header="{x:Static props:Resources.TotalTimes}" Margin="0,7">
+                        <TextBlock Margin="0,7" Text="{Binding TotalTimes}"/>
+                    </HeaderedContentControl>
+                    <HeaderedContentControl Header="{x:Static props:Resources.Score}" Margin="0,7">
+                        <ItemsControl Margin="0,7">
+                            <TextBlock Text="{Binding Score}"/>
+                            <Button Content="{x:Static props:Resources.ClickToRefresh}" HorizontalAlignment="Left" Style="{StaticResource LightForegroundButton}"
+                                Margin="0,4" Click="RefreshBtnClick"/>
+                        </ItemsControl>
+                    </HeaderedContentControl>
+                </ItemsControl>
+                <ItemsControl Margin="12,0">
+                    <Button x:Name="LogoutBtn" Grid.Column="1" Content="Log out" Padding="8,10" Margin="0,7" Click="LogoutBtnClick"
+                    Style="{StaticResource FloatBtnStyle}" />
+                </ItemsControl>
+            </ItemsControl>
+        </ScrollViewer>
+        <Grid Background="White" x:Name="LoginSignupPart" Visibility="Visible">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition />
+            </Grid.RowDefinitions>
+            <Rectangle x:Name="Processing" Height="3" Fill="#FF58BB92" Width="0" IsEnabled="True" HorizontalAlignment="Left" 
+                       VerticalAlignment="Top"
+                       Style="{StaticResource ProcessRectstyle}"/>
+            <ItemsControl TextElement.FontSize="16" Padding="25,7" HorizontalAlignment="Center" MinWidth="320">
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="Loaded">
+                        <ei:ChangePropertyAction PropertyName="Text" TargetObject="{Binding ElementName=TitleTB}"
+                                                         Value="{x:Static props:Resources.Login}"/>
+                        <ei:ChangePropertyAction PropertyName="Visibility" TargetObject="{Binding ElementName=SignupPart}"
+                                                         Value="{StaticResource Visibility.Collapsed}"/>
+                        <ei:ChangePropertyAction PropertyName="Visibility" TargetObject="{Binding ElementName=LoginPart}"
+                                                         Value="{StaticResource Visibility.Visible}"/>
+                        <ei:ChangePropertyAction PropertyName="Visibility" TargetObject="{Binding ElementName=LoginBtn}"
+                                                         Value="{StaticResource Visibility.Visible}"/>
+                        <ei:ChangePropertyAction PropertyName="Visibility" TargetObject="{Binding ElementName=SignupBtn}"
+                                                         Value="{StaticResource Visibility.Visible}"/>
+                        <ei:ChangePropertyAction PropertyName="Visibility" TargetObject="{Binding ElementName=CancelBtn}"
+                                                         Value="{StaticResource Visibility.Collapsed}"/>
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
+                <TextBlock x:Name="TitleTB" Text="{x:Static props:Resources.Login}" FontSize="40" FontWeight="Light" HorizontalAlignment="Center" Margin="0,4"/>
+                <ItemsControl x:Name="SignupPart" Visibility="Collapsed">
+                    <TextBox x:Name="NickNameTB" Margin="0,7" Padding="0,4"
+                         BorderThickness="0,0,0,1"
+                         Style="{StaticResource PlaceHolderTextBoxStyle}"
+                         controls:PlaceHolder.Content="{x:Static props:Resources.NickName}"/>
+                    <TextBox x:Name="UserNameTB" Margin="0,7" Padding="0,4"
+                         BorderThickness="0,0,0,1" Text="{Binding Text, ElementName=UserNameComboBox}"
+                         Style="{StaticResource PlaceHolderTextBoxStyle}"
+                         controls:PlaceHolder.Content="{x:Static props:Resources.UserName}"/>
+                    <PasswordBox x:Name="SignupPswBox" Margin="0,7" Padding="0,4"
+                             BorderThickness="0,0,0,1"
+                             controls:PlaceHolder.Content="{x:Static props:Resources.Password}"/>
+                    <PasswordBox x:Name="SignupConfirmPB" Margin="0,7" Padding="0,4"
+                             BorderThickness="0,0,0,1"
+                             controls:PlaceHolder.Content="{x:Static props:Resources.ConfirmPassword}"/>
+                </ItemsControl>
+                <ItemsControl x:Name="LoginPart" >
+                    <ComboBox x:Name="UserNameComboBox" Style="{StaticResource ComboBoxStyle}" IsEditable="True" 
+                          Margin="0,7" Padding="0,4" BorderThickness="0,0,0,1"
+                         controls:PlaceHolder.Content="{x:Static props:Resources.UserName}"/>
+                    <PasswordBox x:Name="LoginPswBox" Margin="0,7" Padding="0,4"
+                             BorderThickness="0,0,0,1"
+                             controls:PlaceHolder.Content="{x:Static props:Resources.Password}"/>
+                </ItemsControl>
+                <Canvas x:Name="ErrorCanvas" Height="0">
+                    <VisualStateManager.VisualStateGroups>
+                        <VisualStateGroup>
+                            <VisualState x:Name="FadeOut">
+                                <Storyboard>
+                                    <DoubleAnimation Storyboard.TargetName="ErrorCanvas" Storyboard.TargetProperty="Height"
+                                                     Duration="0:0:0.5" From="20" To="0">
+                                        <DoubleAnimation.EasingFunction>
+                                            <CubicEase EasingMode="EaseOut" />
+                                        </DoubleAnimation.EasingFunction>
+                                    </DoubleAnimation>
+                                    <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ErrorTB" Storyboard.TargetProperty="Visibility">
+                                        <ObjectAnimationUsingKeyFrames.KeyFrames>
+                                            <DiscreteObjectKeyFrame KeyTime="0:0:0.2" Value="{StaticResource Visibility.Collapsed}"/>
+                                        </ObjectAnimationUsingKeyFrames.KeyFrames>
+                                    </ObjectAnimationUsingKeyFrames>
+                                </Storyboard>
+                            </VisualState>
+                            <VisualState x:Name="FadeIn">
+                                <Storyboard>
+                                    <DoubleAnimation Storyboard.TargetName="ErrorCanvas" Storyboard.TargetProperty="Height"
+                                                     Duration="0:0:0.5" From="0" To="20">
+                                        <DoubleAnimation.EasingFunction>
+                                            <CubicEase EasingMode="EaseOut" />
+                                        </DoubleAnimation.EasingFunction>
+                                    </DoubleAnimation>
+                                    <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ErrorTB" Storyboard.TargetProperty="Visibility">
+                                        <ObjectAnimationUsingKeyFrames.KeyFrames>
+                                            <DiscreteObjectKeyFrame KeyTime="0:0:0.2" Value="{StaticResource Visibility.Visible}"/>
+                                        </ObjectAnimationUsingKeyFrames.KeyFrames>
+                                    </ObjectAnimationUsingKeyFrames>
+                                </Storyboard>
+                            </VisualState>
+                        </VisualStateGroup>
+                    </VisualStateManager.VisualStateGroups>
+                    <TextBlock x:Name="ErrorTB" FontSize="14" Foreground="Red"/>
+                </Canvas>
+                <CheckBox x:Name="LogMeCheck" Margin="0,7" Content="{x:Static props:Resources.LogAccount}" VerticalContentAlignment="Center"/>
+                <Grid x:Name="QuickLogin" MaxWidth="300" Visibility="Collapsed">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+                    <CheckBox x:Name="AutoLoginCheck" Content="Auto login" VerticalContentAlignment="Center"/>
+                </Grid>
+                <Button x:Name="LoginBtn" Content="{x:Static props:Resources.Login}" Padding="8" Margin="0,7" Click="LoginBtnClick"
+                    Style="{StaticResource FloatBtnStyle}"/>
+                <Button x:Name="SignupBtn" Grid.Column="1" Content="{x:Static props:Resources.SignUp}" Padding="8" Margin="0,7" Click="SignupBtnClick"
+                    Style="{StaticResource FloatBtnStyle}">
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="Click">
+                            <ei:ChangePropertyAction PropertyName="Text" TargetObject="{Binding ElementName=TitleTB}"
+                                                         Value="{x:Static props:Resources.SignUp}"/>
+                            <ei:ChangePropertyAction PropertyName="Visibility" TargetObject="{Binding ElementName=SignupPart}"
+                                                         Value="{StaticResource Visibility.Visible}"/>
+                            <ei:ChangePropertyAction PropertyName="Visibility" TargetObject="{Binding ElementName=SignupPart}"
+                                                         Value="{StaticResource Visibility.Visible}"/>
+                            <ei:ChangePropertyAction PropertyName="Visibility" TargetObject="{Binding ElementName=LoginPart}"
+                                                         Value="{StaticResource Visibility.Collapsed}"/>
+                            <ei:ChangePropertyAction PropertyName="Visibility" TargetObject="{Binding ElementName=LoginBtn}"
+                                                         Value="{StaticResource Visibility.Collapsed}"/>
+                            <ei:ChangePropertyAction PropertyName="Visibility" TargetObject="{Binding ElementName=CancelBtn}"
+                                                         Value="{StaticResource Visibility.Visible}"/>
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                </Button>
+                <Button x:Name="CancelBtn" Content="{x:Static props:Resources.Cancel}" Padding="8" Margin="0,12" Visibility="Collapsed"
+                    Style="{StaticResource FloatBtnStyle}">
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="Click">
+                            <ei:ChangePropertyAction PropertyName="Text" TargetObject="{Binding ElementName=TitleTB}"
+                                                         Value="{x:Static props:Resources.Login}"/>
+                            <ei:ChangePropertyAction PropertyName="Visibility" TargetObject="{Binding ElementName=SignupPart}"
+                                                         Value="{StaticResource Visibility.Collapsed}"/>
+                            <ei:ChangePropertyAction PropertyName="Visibility" TargetObject="{Binding ElementName=LoginPart}"
+                                                         Value="{StaticResource Visibility.Visible}"/>
+                            <ei:ChangePropertyAction PropertyName="Visibility" TargetObject="{Binding ElementName=LoginBtn}"
+                                                         Value="{StaticResource Visibility.Visible}"/>
+                            <ei:ChangePropertyAction PropertyName="Visibility" TargetObject="{Binding ElementName=SignupBtn}"
+                                                         Value="{StaticResource Visibility.Visible}"/>
+                            <ei:ChangePropertyAction PropertyName="Visibility" TargetObject="{Binding ElementName=CancelBtn}"
+                                                         Value="{StaticResource Visibility.Collapsed}"/>
+                            <!--<ei:ChangePropertyAction PropertyName="Visibility" TargetObject="{Binding ElementName=QuickLogin}"
+                                                         Value="{StaticResource Visibility.Visible}"/>-->
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                </Button>
+            </ItemsControl>
+            <ItemsControl Grid.Row="1">
+                <Grid>
+                    <Border BorderThickness="0,0,0,1" BorderBrush="LightGray" Margin="12,0" VerticalAlignment="Center"
+                            SnapsToDevicePixels="True"/>
+                    <TextBlock Text="Beta version" FontSize="16" HorizontalAlignment="Center" Background="White" Padding="12,7"/>
+                </Grid>
+            </ItemsControl>
+        </Grid>
+     </Grid>
+</Page>

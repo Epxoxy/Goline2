@@ -7,20 +7,20 @@ namespace LogicUnit.Analyzer
     /// <summary>
     /// Alpha-beta cut max-min search algorinthm analyzer
     /// </summary>
-    public class AlphaBetaMaxMinAnalyzer : Interface.IAnalyzer<int[,], IntPoint>
+    public class AlphaBetaMaxMinAnalyzer : Interface.IAnalyzer<Interface.IMap, IntPoint>
     {
-        public IntPoint Analysis(int[,] data, int deep)
-        {
-            return FindMaxMin(data, deep);
-        }
-
-        public AlphaBetaMaxMinAnalyzer(Interface.IMap map, int env, int human)
+        public IntPoint Analysis(Interface.IMap map, int deep)
         {
             this.map = map;
-            this.env = env;
-            this.human = human;
             notAllow = map.NotAllow;
             allow = map.Allow;
+            return FindMaxMin(map.CurrentData(), deep);
+        }
+
+        public AlphaBetaMaxMinAnalyzer(int env, int human)
+        {
+            this.env = env;
+            this.human = human;
         }
 
         private Interface.IMap map;
@@ -38,7 +38,7 @@ namespace LogicUnit.Analyzer
             var points = generateAvaliable(ref board, deep);
             //Init scores
             var scores = new int[board.GetLength(0), board.GetLength(1)];
-            fullEvaluate(ref board, ref scores);
+            fullEvaluation(ref board, ref scores);
             //Start maxValueminValue
             for (int i = 0; i < points.Count; ++i)
             {
@@ -47,31 +47,31 @@ namespace LogicUnit.Analyzer
                 int[,] scoresCopy = ArrayHelper.CopyMatrix(ref scores);
                 evaluatePoint(ref board, ref scoresCopy, point.X, point.Y);
                 var v = min(ref board, ref scoresCopy, deep - 1, (best > minValue ? best : minValue), maxValue);
-                if (v == best) bestPoints.Add(point);
+                board[point.X, point.Y] = allow;
+                if (v < best) continue;
                 if (v > best)
                 {
                     best = v;
                     bestPoints.Clear();
-                    bestPoints.Add(point);
                 }
-                board[point.X, point.Y] = allow;
+                bestPoints.Add(point);
             }
             //If best is not found, get best from scores
             if (bestPoints.Count < 1)
             {
                 for (int i = 0; i < scores.GetLength(0); ++i)
                 {
-                    for (int j = 0; j < scores.GetLength(0); ++j)
+                    for (int j = 0; j < scores.GetLength(1); ++j)
                     {
                         if (board[i, j] == allow)
                         {
-                            if (scores[i, j] == best) bestPoints.Add(new IntPoint(i, j));
+                            if (scores[i, j] < best) continue;
                             if (scores[i, j] > best)
                             {
                                 best = scores[i, j];
                                 bestPoints.Clear();
-                                bestPoints.Add(new IntPoint(i, j));
                             }
+                            bestPoints.Add(new IntPoint(i, j));
                         }
                     }
                 }
@@ -84,8 +84,8 @@ namespace LogicUnit.Analyzer
 
         private int max(ref int[,] board, ref int[,] scores, int deep, int alpha, int beta)
         {
-            var v0 = calculateTotalScores(ref scores);
-            if (deep <= 0 || ended(board)) return v0;
+            var v0 = calculateTotal(ref scores);
+            if (deep <= 0 || isEnded(board)) return v0;
             var best = minValue;
             var locations = generateAvaliable(ref board, deep);
             for (int i = 0; i < locations.Count; ++i)
@@ -104,8 +104,8 @@ namespace LogicUnit.Analyzer
 
         private int min(ref int[,] board, ref int[,] scores, int deep, int alpha, int beta)
         {
-            var v0 = calculateTotalScores(ref scores);
-            if (deep <= 0 || ended(board)) return v0;
+            var v0 = calculateTotal(ref scores);
+            if (deep <= 0 || isEnded(board)) return v0;
             var best = maxValue;
             var locations = generateAvaliable(ref board, deep);
             for (int i = 0; i < locations.Count; ++i)
@@ -127,18 +127,18 @@ namespace LogicUnit.Analyzer
         }
 
         /// <summary>
-        /// Calculate total score of exist scores matrix
+        /// Calculate total value of matrix
         /// </summary>
-        /// <param name="scores"></param>
+        /// <param name="matrix"></param>
         /// <returns></returns>
-        private int calculateTotalScores(ref int[,] scores)
+        private int calculateTotal(ref int[,] matrix)
         {
             int value = 0;
-            for (int i = 0; i < scores.GetLength(0); ++i)
+            for (int i = 0; i < matrix.GetLength(0); ++i)
             {
-                for (int j = 0; j < scores.GetLength(1); ++j)
+                for (int j = 0; j < matrix.GetLength(1); ++j)
                 {
-                    value += scores[i, j];
+                    value += matrix[i, j];
                 }
             }
             return value;
@@ -149,11 +149,11 @@ namespace LogicUnit.Analyzer
         /// </summary>
         /// <param name="board"></param>
         /// <param name="scores"></param>
-        private void fullEvaluate(ref int[,] board, ref int[,] scores)
+        private void fullEvaluation(ref int[,] board, ref int[,] scores)
         {
             for (int i = 0; i < board.GetLength(0); ++i)
             {
-                for (int j = 0; j < board.GetLength(0); ++j)
+                for (int j = 0; j < board.GetLength(1); ++j)
                 {
                     if (board[i, j] != allow && board[i, j] != notAllow)
                     {
@@ -175,7 +175,7 @@ namespace LogicUnit.Analyzer
         /// <param name="y">Location's y</param>
         private void evaluatePoint(ref int[,] board, ref int[,] scores, out int lineCount, int x, int y)
         {
-            scores[x, y] = evaluatePointScore(ref board, out lineCount, x, y);
+            scores[x, y] = evaluateNearPoint(ref board, x, y, out lineCount);
         }
 
         /// <summary>
@@ -188,18 +188,18 @@ namespace LogicUnit.Analyzer
         private void evaluatePoint(ref int[,] board, ref int[,] scores, int x, int y)
         {
             int lineCount;
-            scores[x, y] = evaluatePointScore(ref board, out lineCount, x, y);
+            scores[x, y] = evaluateNearPoint(ref board, x, y, out lineCount);
         }
 
         /// <summary>
         /// Evaluate location's score
         /// </summary>
         /// <param name="board">Origin board</param>
-        /// <param name="lineCount"></param>
         /// <param name="x">Location's x</param>
         /// <param name="y">Location's y</param>
+        /// <param name="lineCount"></param>
         /// <returns></returns>
-        private int evaluatePointScore(ref int[,] board, out int lineCount, int x, int y)
+        private int evaluateNearPoint(ref int[,] board, int x, int y, out int lineCount)
         {
             lineCount = 0;
             var lines = map.LinesOf(x, y);
@@ -208,40 +208,38 @@ namespace LogicUnit.Analyzer
             {
                 ++lineCount;
 
-                int reachable = 0, selfOccupy = 0, otherOccupy = 0;
-                int score = 0;
-
+                int reachable = 0, self = 0, other = 0,score = 0;
                 var points = line.ToPoints();
                 foreach (var point in points)
                 {
                     if (board[point.X, point.Y] == allow) ++reachable;
                     else
                     {
-                        if (board[point.X, point.Y] == env) ++selfOccupy;
-                        else ++otherOccupy;
+                        if (board[point.X, point.Y] == env) ++self;
+                        else ++other;
                     }
                 }
 
                 if (reachable == 3) score = GlobalLevel.EEE;
                 if (reachable == 0)
                 {
-                    if (selfOccupy == 0) score = GlobalLevel.OOO;
+                    if (self == 0) score = GlobalLevel.OOO;
                     //May be it has error, method shouldn't go here
-                    return GlobalLevel.SSS;
                 }
 
-                switch (selfOccupy)
+                switch (self)
                 {
                     case 0:
-                        if (otherOccupy == 2) ++ooeCount;
-                        if (otherOccupy == 1) score = GlobalLevel.OEE;
+                        if (other == 2) ++ooeCount;
+                        if (other == 1) score = GlobalLevel.OEE;
                         break;
                     case 1:
-                        if (otherOccupy == 1) score = GlobalLevel.SOE;
-                        if (otherOccupy == 0) score = GlobalLevel.SEE;
+                        if (other == 1) score = GlobalLevel.SOE;
+                        if (other == 0) score = GlobalLevel.SEE;
                         break;
-                    case 2:
-                        ++sseCount;
+                    case 2:++sseCount;
+                        break;
+                    case 3:score = GlobalLevel.SSS;
                         break;
                     default: break;
                 }
@@ -249,58 +247,36 @@ namespace LogicUnit.Analyzer
             }
 
             if (sseCount > 1) totalScore += GlobalLevel.DoubleSSE * (sseCount * (sseCount + 1) / 2);
-            else totalScore += GlobalLevel.SSE;
+            else if (sseCount == 1) totalScore += GlobalLevel.SSE;
 
-            if (ooeCount > 1) totalScore += GlobalLevel.DoubleOOE * (ooeCount * (ooeCount + 1) / 2);
-            else totalScore += GlobalLevel.OOE;
+            if (ooeCount > 1)
+                totalScore += GlobalLevel.DoubleOOE * (ooeCount * (ooeCount + 1) / 2);
+            else if(ooeCount == 1) totalScore += GlobalLevel.OOE;
 
             return totalScore;
         }
 
         /// <summary>
-        /// Check if board is end.
+        /// Check if game is end.
         /// </summary>
         /// <param name="board"></param>
         /// <returns></returns>
-        private bool ended(int[,] board)
+        private bool isEnded(int[,] board)
         {
             int avaliable = 0;
             foreach (var line in map.Lines())
             {
                 var points = line.ToPoints();
-                int humanOccupy = 0, aiOccupy = 0;
+                int human = 0, env = 0;
                 foreach (var point in points)
                 {
-                    if (board[point.X, point.Y] == human) ++humanOccupy;
-                    else if (board[point.X, point.Y] == env) ++aiOccupy;
+                    if (board[point.X, point.Y] == this.human) ++human;
+                    else if (board[point.X, point.Y] == this.env) ++env;
                     else if (board[point.X, point.Y] == avaliable) ++avaliable;
                 }
-                if (humanOccupy == 3 || aiOccupy == 3) return true;
+                if (human == 3 || env == 3) return true;
             }
             if (avaliable == 0) return true;
-            return false;
-        }
-
-        /// <summary>
-        /// Check if board will append winner
-        /// </summary>
-        /// <param name="board"></param>
-        /// <param name="location"></param>
-        /// <param name="id"></param>
-        /// <returns></returns>
-        private bool hasNewWinner(ref int[,] board, IntPoint newest, int id)
-        {
-            var lines = map.LinesOf(newest);
-            foreach (var line in lines)
-            {
-                int count = 0;
-                var points = line.ToPoints();
-                foreach (var point in points)
-                {
-                    if (board[point.X, point.Y] == id) ++count;
-                }
-                if (count == 3) return true;
-            }
             return false;
         }
 
@@ -370,46 +346,48 @@ namespace LogicUnit.Analyzer
             foreach (var line in lines)
             {
                 var points = line.ToPoints();
-                int reachable = 0, selfOccupy = 0, otherOccupy = 0;
+                int reachable = 0, self = 0, other = 0;
                 foreach (var point in points)
                 {
-                    int value = board[point.X, point.Y];
-                    if (value == allow) ++reachable;
+                    int v = board[point.X, point.Y];
+                    if (v == allow) ++reachable;
                     else
                     {
-                        if (value == id) ++selfOccupy;
-                        else ++otherOccupy;
+                        if (v == id) ++self;
+                        else ++other;
                     }
                 }
                 //self-self-empty to self-self-self
-                if (selfOccupy == 2 && reachable == 1) score += OneSidedLevel.SSS;
+                if (self == 2 && reachable == 1) score += OneSidedLevel.SSS;
                 //self-empty-empty to self-self-empty
-                else if (selfOccupy == 1 && reachable == 2) score += OneSidedLevel.SSE;
+                else if (self == 1 && reachable == 2) score += OneSidedLevel.SSE;
                 //empty-empty-empty to self-empty-empty
-                else if (reachable != 3) score += OneSidedLevel.SEE;
+                else if (reachable == 3) score += OneSidedLevel.SEE;
+                else if(reachable == 1) score += OneSidedLevel.EHas;
             }
             return score;
         }
 
         class GlobalLevel
         {
-            public const int SSS = 12000;
+            public const int SSS = 25000;
             public const int DoubleSSE = 2500;
             public const int SSE = 500;
             public const int SEE = 100;
             public const int EEE = 0;
             public const int SOE = 0;
             public const int OEE = -100;
-            public const int OOE = -500;
-            public const int DoubleOOE = -2500;
-            public const int OOO = -12000;
+            public const int OOE = -3000;
+            public const int DoubleOOE = -9000;
+            public const int OOO = -25000;
         }
 
         class OneSidedLevel
         {
             public const int SSS = 10000;
             public const int SSE = 100;
-            public const int SEE = 1;
+            public const int SEE = 2;
+            public const int EHas = 1;
         }
     }
 }

@@ -9,8 +9,8 @@ namespace NetworkService
     public interface IProxy : IDisposable
     {
         string Token { get; set; }
-        bool Relay(Message msg);
-        void Enable(IProxyCenter center);
+        void Relay(Message msg);
+        void Enable(IBridge center);
     }
 
 }

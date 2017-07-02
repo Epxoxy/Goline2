@@ -1,0 +1,46 @@
+﻿<Window xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:GoLine"
+        xmlns:sys="clr-namespace:System;assembly=mscorlib"
+        xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity" 
+        xmlns:ei="http://schemas.microsoft.com/expression/2010/interactions"
+        xmlns:ed="http://schemas.microsoft.com/expression/2010/drawing"
+        x:Class="GoLine.MainWindow"
+        mc:Ignorable="d" WindowStartupLocation="CenterScreen"
+        Title="GoLine" MinHeight="625" MinWidth="550"
+        Height="625" Width="550">
+    <Window.Resources>
+        <Color x:Key="TransparentFill.Color" A="0" R="128" G="128" B="128" />
+        <Color x:Key="OpenFill.Color" A="85" R="128" G="128" B="128" />
+        <SolidColorBrush x:Key="TransparentFill" Color="{StaticResource TransparentFill.Color}" />
+     </Window.Resources>
+    <AdornerDecorator>
+        <Grid ManipulationBoundaryFeedback="OnManipulationBoundaryFeedback">
+            <Grid x:Name="NormalLayer">
+                <Frame x:Name="MainFrame" NavigationUIVisibility="Hidden" Navigating="MainFrameNavigating"/>
+            </Grid>
+            <Button x:Name="BackBtn" x:FieldModifier="private" HorizontalAlignment="Left" VerticalAlignment="Top" 
+                    Width="48" Height="30"
+                    Style="{StaticResource BackButtonStyle}"
+                    Command="{x:Static NavigationCommands.BrowseBack}"
+                    CommandTarget="{Binding ElementName=MainFrame}">
+            </Button>
+            <local:FlyoutControl x:Name="flyout" FadeInFrom="-200" HorizontalContentAlignment="Left">
+                <Frame x:Name="FlyoutFrame" NavigationUIVisibility="Hidden" Navigating="FlyoutFrameNavigating">
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="Navigated">
+                            <ei:ChangePropertyAction TargetObject="{Binding ElementName=flyout}" PropertyName="IsOpen"
+                                                     Value="{StaticResource Boolean.True}"/>
+                        </i:EventTrigger>
+                        <i:EventTrigger EventName="Navigating">
+                            <ei:ChangePropertyAction TargetObject="{Binding ElementName=flyout}" PropertyName="IsOpen"
+                                                     Value="{StaticResource Boolean.False}"/>
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                </Frame>
+            </local:FlyoutControl>
+        </Grid>
+    </AdornerDecorator>
+</Window>

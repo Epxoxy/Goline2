@@ -1,0 +1,15 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="SqlServices.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="SqlServerConnectionString" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Data Source=bds256164280.my3w.com;Integrated Security=False;User ID=bds256164280;Password=zc1116cyg;Connect Timeout=15;Encrypt=False;TrustServerCertificate=True;ApplicationIntent=ReadWrite;MultiSubnetFailover=False</Value>
+    </Setting>
+    <Setting Name="SqliteConnectString" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Data Source=GameScore.sqlite</Value>
+    </Setting>
+    <Setting Name="SqlitePsw" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Encrypt5px.GameProject</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>

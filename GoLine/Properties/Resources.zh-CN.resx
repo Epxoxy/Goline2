@@ -1,0 +1,464 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="About" xml:space="preserve">
+    <value>关于</value>
+  </data>
+  <data name="AboutPoints" xml:space="preserve">
+    <value>关于点数</value>
+  </data>
+  <data name="AIVSAI" xml:space="preserve">
+    <value>AI对战</value>
+  </data>
+  <data name="Back" xml:space="preserve">
+    <value>返回</value>
+  </data>
+  <data name="ChangeLangTips" xml:space="preserve">
+    <value>语言更改生效需要重启程序,立即重启程序?</value>
+  </data>
+  <data name="Exit" xml:space="preserve">
+    <value>退出</value>
+  </data>
+  <data name="Front" xml:space="preserve">
+    <value>Front</value>
+  </data>
+  <data name="Help" xml:space="preserve">
+    <value>帮助</value>
+  </data>
+  <data name="ID" xml:space="preserve">
+    <value>ID</value>
+  </data>
+  <data name="Menu" xml:space="preserve">
+    <value>菜单</value>
+  </data>
+  <data name="Music" xml:space="preserve">
+    <value>音乐</value>
+  </data>
+  <data name="Name" xml:space="preserve">
+    <value>姓名</value>
+  </data>
+  <data name="Newest" xml:space="preserve">
+    <value>最新的</value>
+  </data>
+  <data name="Next" xml:space="preserve">
+    <value>下一个</value>
+  </data>
+  <data name="Online" xml:space="preserve">
+    <value>在线</value>
+  </data>
+  <data name="Other" xml:space="preserve">
+    <value>其他</value>
+  </data>
+  <data name="PlaceAChess" xml:space="preserve">
+    <value>下一个棋子</value>
+  </data>
+  <data name="PVE" xml:space="preserve">
+    <value>人机</value>
+  </data>
+  <data name="PVP" xml:space="preserve">
+    <value>自由模式</value>
+  </data>
+  <data name="Reset" xml:space="preserve">
+    <value>重置</value>
+  </data>
+  <data name="Score" xml:space="preserve">
+    <value>成绩</value>
+  </data>
+  <data name="SelectMode" xml:space="preserve">
+    <value>选择模式</value>
+  </data>
+  <data name="Settings" xml:space="preserve">
+    <value>设置</value>
+  </data>
+  <data name="Specials" xml:space="preserve">
+    <value>特殊</value>
+  </data>
+  <data name="Start" xml:space="preserve">
+    <value>开始</value>
+  </data>
+  <data name="Top" xml:space="preserve">
+    <value>排行</value>
+  </data>
+  <data name="Undo" xml:space="preserve">
+    <value>撤销</value>
+  </data>
+  <data name="Volume" xml:space="preserve">
+    <value>音量</value>
+  </data>
+  <data name="Welcome" xml:space="preserve">
+    <value>欢迎</value>
+  </data>
+  <data name="WinTheGame" xml:space="preserve">
+    <value>赢得游戏</value>
+  </data>
+  <data name="AboutPointsExplain" xml:space="preserve">
+    <value>即将到来</value>
+  </data>
+  <data name="GameEnded" xml:space="preserve">
+    <value>游戏结束</value>
+  </data>
+  <data name="GameEndedExplain" xml:space="preserve">
+    <value>当有玩家赢得游戏或者当所有玩家都达到最大步数，棋盘不能再容纳棋子时，游戏结束。</value>
+  </data>
+  <data name="PlaceAChessExplain" xml:space="preserve">
+    <value>只需要把你的棋子下在线的交点处，当一个玩家下了棋后改变回合</value>
+  </data>
+  <data name="WinTheGameExplain" xml:space="preserve">
+    <value>当玩家第一个完成在一条线上占有三点时，该玩家赢得游戏</value>
+  </data>
+  <data name="ModifyTime" xml:space="preserve">
+    <value>修改时间</value>
+  </data>
+  <data name="AboutGameMode" xml:space="preserve">
+    <value>关于游戏模式</value>
+  </data>
+  <data name="AboutGameModeExplain" xml:space="preserve">
+    <value>AI对战 ：测试用途；
+人机对战 ：挑战AI并记录你的成绩；
+自由模式 : 与其他本地玩家自由游玩，不记录成绩；
+在线模式 ： 与网上玩家对战，并记录成绩</value>
+  </data>
+  <data name="AboutScore" xml:space="preserve">
+    <value>关于成绩/积分(搭建中)</value>
+  </data>
+  <data name="AboutScoreExplain" xml:space="preserve">
+    <value>赢 : 得一个
+输 : 失一分
+和棋 : 无</value>
+  </data>
+  <data name="Drawn" xml:space="preserve">
+    <value>和棋</value>
+  </data>
+  <data name="Fail" xml:space="preserve">
+    <value>败</value>
+  </data>
+  <data name="NickName" xml:space="preserve">
+    <value>昵称</value>
+  </data>
+  <data name="Password" xml:space="preserve">
+    <value>密码</value>
+  </data>
+  <data name="UserName" xml:space="preserve">
+    <value>用户名</value>
+  </data>
+  <data name="Win" xml:space="preserve">
+    <value>胜</value>
+  </data>
+  <data name="ConfirmPassword" xml:space="preserve">
+    <value>确认密码</value>
+  </data>
+  <data name="LogAccount" xml:space="preserve">
+    <value>记住我</value>
+  </data>
+  <data name="Login" xml:space="preserve">
+    <value>登录</value>
+  </data>
+  <data name="SignUp" xml:space="preserve">
+    <value>注册</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>取消</value>
+  </data>
+  <data name="ClickToRefresh" xml:space="preserve">
+    <value>点击刷新</value>
+  </data>
+  <data name="TotalTimes" xml:space="preserve">
+    <value>总场数</value>
+  </data>
+  <data name="AIPlayer" xml:space="preserve">
+    <value>AI玩家</value>
+  </data>
+  <data name="AIPlayer2" xml:space="preserve">
+    <value>AI玩家二</value>
+  </data>
+  <data name="Guest" xml:space="preserve">
+    <value>访客</value>
+  </data>
+  <data name="LoginRequestTips" xml:space="preserve">
+    <value>当前未登录账号将导致游戏记录仅存在本地，现在登录？</value>
+  </data>
+  <data name="Message" xml:space="preserve">
+    <value>消息</value>
+  </data>
+  <data name="OK" xml:space="preserve">
+    <value> 确认</value>
+  </data>
+  <data name="PrimaryPlayer" xml:space="preserve">
+    <value>玩家一</value>
+  </data>
+  <data name="RequireLogin" xml:space="preserve">
+    <value>需要登录</value>
+  </data>
+  <data name="SecondaryPlayer" xml:space="preserve">
+    <value>玩家二</value>
+  </data>
+  <data name="SelectLevel" xml:space="preserve">
+    <value>选择等级</value>
+  </data>
+  <data name="SelectStart" xml:space="preserve">
+    <value>选择先手玩家</value>
+  </data>
+  <data name="StartNewGame" xml:space="preserve">
+    <value>开始新游戏</value>
+  </data>
+  <data name="TieEnded" xml:space="preserve">
+    <value>当前游戏为平局</value>
+  </data>
+  <data name="Time" xml:space="preserve">
+    <value>时间</value>
+  </data>
+  <data name="Tips" xml:space="preserve">
+    <value>提示</value>
+  </data>
+  <data name="Guest2" xml:space="preserve">
+    <value>访客2</value>
+  </data>
+  <data name="AdvancedAI" xml:space="preserve">
+    <value>高级AI</value>
+  </data>
+  <data name="ElementaryAI" xml:space="preserve">
+    <value>初级AI</value>
+  </data>
+  <data name="IntermediateAI" xml:space="preserve">
+    <value>中级AI</value>
+  </data>
+  <data name="Account" xml:space="preserve">
+    <value>账号</value>
+  </data>
+  <data name="ChangeLang" xml:space="preserve">
+    <value>更改语言</value>
+  </data>
+  <data name="AboutApp" xml:space="preserve">
+    <value>这是一个使用C#开发的软件工程课程设计的游戏</value>
+  </data>
+  <data name="AboutOpenSource" xml:space="preserve">
+    <value>该软件开源但仅用于学习用途</value>
+  </data>
+  <data name="AppName" xml:space="preserve">
+    <value>三玄棋</value>
+  </data>
+  <data name="AppRequire" xml:space="preserve">
+    <value>该软件运行需要.Net framework 4.5.2环境</value>
+  </data>
+  <data name="Reference" xml:space="preserve">
+    <value>引用</value>
+  </data>
+  <data name="VisitGithub" xml:space="preserve">
+    <value>访问Github</value>
+  </data>
+  <data name="OtherSetting" xml:space="preserve">
+    <value>其他设置</value>
+  </data>
+  <data name="AutoNoticeNewest" xml:space="preserve">
+    <value>超时自动提醒</value>
+  </data>
+  <data name="BoardLineColor" xml:space="preserve">
+    <value>棋盘线颜色</value>
+  </data>
+  <data name="ChessBrush" xml:space="preserve">
+    <value>棋子颜色</value>
+  </data>
+  <data name="Me" xml:space="preserve">
+    <value>我</value>
+  </data>
+  <data name="Off" xml:space="preserve">
+    <value>关</value>
+  </data>
+  <data name="On" xml:space="preserve">
+    <value>开</value>
+  </data>
+  <data name="Sounds" xml:space="preserve">
+    <value>声音</value>
+  </data>
+  <data name="ConnectFail" xml:space="preserve">
+    <value>连接失败</value>
+  </data>
+  <data name="EmptyUserNameOrPsw" xml:space="preserve">
+    <value>用户名/密码为空</value>
+  </data>
+  <data name="GenerateRecordFail" xml:space="preserve">
+    <value>建立资料错误</value>
+  </data>
+  <data name="OtherError" xml:space="preserve">
+    <value>其他错误</value>
+  </data>
+  <data name="PasswordNotSame" xml:space="preserve">
+    <value>密码不一致！</value>
+  </data>
+  <data name="PSWEmptyTips" xml:space="preserve">
+    <value>密码不能为空！</value>
+  </data>
+  <data name="Success" xml:space="preserve">
+    <value>成功</value>
+  </data>
+  <data name="UserExist" xml:space="preserve">
+    <value>用户已存在</value>
+  </data>
+  <data name="UserNameEmptyTips" xml:space="preserve">
+    <value>用户名不能为空！</value>
+  </data>
+  <data name="UserNotExist" xml:space="preserve">
+    <value>用户不存在</value>
+  </data>
+  <data name="WrongPassword" xml:space="preserve">
+    <value>密码错误</value>
+  </data>
+  <data name="UpdateTime" xml:space="preserve">
+    <value>更新时间</value>
+  </data>
+  <data name="SoundsEffects" xml:space="preserve">
+    <value>音效</value>
+  </data>
+  <data name="DebugExplain" xml:space="preserve">
+    <value>您当前正处于调试模式，由于VS2015调试程序所使用的配置文件和设置不同于非调试模式，直接重启将不会使用调试文件，可能造成您误以为修改设置未生效，因此程序将不会自动重启，您需要自己手动重新开始项目。</value>
+  </data>
+  <data name="DebugMode" xml:space="preserve">
+    <value>调试模式</value>
+  </data>
+  <data name="TestingTips" xml:space="preserve">
+    <value>测试功能！</value>
+  </data>
+  <data name="IP" xml:space="preserve">
+    <value>IP</value>
+  </data>
+  <data name="Port" xml:space="preserve">
+    <value>端口</value>
+  </data>
+  <data name="SetConnection" xml:space="preserve">
+    <value>设置连接</value>
+  </data>
+  <data name="ImHost" xml:space="preserve">
+    <value>我是主人</value>
+  </data>
+  <data name="LocalPort" xml:space="preserve">
+    <value>本地端口</value>
+  </data>
+  <data name="Ready" xml:space="preserve">
+    <value>准备</value>
+  </data>
+  <data name="AlwaysAllowPay" xml:space="preserve">
+    <value>总是允许支付</value>
+  </data>
+  <data name="PayCode" xml:space="preserve">
+    <value>支付码</value>
+  </data>
+  <data name="PayForIt" xml:space="preserve">
+    <value>支付</value>
+  </data>
+</root>

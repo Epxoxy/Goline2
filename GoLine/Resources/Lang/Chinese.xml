@@ -1,0 +1,34 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<language>
+  <resources>
+    <resource name="About">关于</resource>
+    <resource name="AboutPoints">AboutPoints</resource>
+    <resource name="AIVSAI">AI对战</resource>
+    <resource name="Back">返回</resource>
+    <resource name="Exit">退出</resource>
+    <resource name="Front">Front</resource>
+    <resource name="Help">帮助</resource>
+    <resource name="ID">ID</resource>
+    <resource name="Menu">菜单</resource>
+    <resource name="Music">音乐</resource>
+    <resource name="Name">姓名</resource>
+    <resource name="Newest">最新的</resource>
+    <resource name="Next">下一个</resource>
+    <resource name="Online">在线</resource>
+    <resource name="Other">其他</resource>
+    <resource name="PlaceAChess">PlaceAChess</resource>
+    <resource name="PVE">人机</resource>
+    <resource name="PVP">双人</resource>
+    <resource name="Reset">重置</resource>
+    <resource name="Score">成绩</resource>
+    <resource name="SelectMode">选择模式</resource>
+    <resource name="Settings">设置</resource>
+    <resource name="Specials">特殊</resource>
+    <resource name="Start">开始</resource>
+    <resource name="Top">排行</resource>
+    <resource name="Undo">撤销</resource>
+    <resource name="Volume">音量</resource>
+    <resource name="Welcome">欢迎</resource>
+    <resource name="WinTheGame">WinTheGame</resource>
+  </resources>
+</language>

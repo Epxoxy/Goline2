@@ -1,0 +1,464 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="About" xml:space="preserve">
+    <value>About</value>
+  </data>
+  <data name="AboutPoints" xml:space="preserve">
+    <value>ABOUT POINTS</value>
+  </data>
+  <data name="AIVSAI" xml:space="preserve">
+    <value>AIVSAI</value>
+  </data>
+  <data name="Back" xml:space="preserve">
+    <value>Back</value>
+  </data>
+  <data name="ChangeLangTips" xml:space="preserve">
+    <value>It needs to restart application to take effect of language setting.Restart right now?</value>
+  </data>
+  <data name="Exit" xml:space="preserve">
+    <value>Exit</value>
+  </data>
+  <data name="Front" xml:space="preserve">
+    <value>Front</value>
+  </data>
+  <data name="Help" xml:space="preserve">
+    <value>Help</value>
+  </data>
+  <data name="ID" xml:space="preserve">
+    <value>ID</value>
+  </data>
+  <data name="Menu" xml:space="preserve">
+    <value>Menu</value>
+  </data>
+  <data name="Music" xml:space="preserve">
+    <value>Music</value>
+  </data>
+  <data name="Name" xml:space="preserve">
+    <value>Name</value>
+  </data>
+  <data name="Newest" xml:space="preserve">
+    <value>Newest</value>
+  </data>
+  <data name="Next" xml:space="preserve">
+    <value>Next</value>
+  </data>
+  <data name="Online" xml:space="preserve">
+    <value>Online</value>
+  </data>
+  <data name="Other" xml:space="preserve">
+    <value>Other</value>
+  </data>
+  <data name="PlaceAChess" xml:space="preserve">
+    <value>PLACE A CHESS</value>
+  </data>
+  <data name="PVE" xml:space="preserve">
+    <value>Human-AI</value>
+  </data>
+  <data name="PVP" xml:space="preserve">
+    <value>Free Mode</value>
+  </data>
+  <data name="Reset" xml:space="preserve">
+    <value>Reset</value>
+  </data>
+  <data name="Score" xml:space="preserve">
+    <value>Score</value>
+  </data>
+  <data name="SelectMode" xml:space="preserve">
+    <value>Select Mode</value>
+  </data>
+  <data name="Settings" xml:space="preserve">
+    <value>Settings</value>
+  </data>
+  <data name="Specials" xml:space="preserve">
+    <value>SPECIALS</value>
+  </data>
+  <data name="Start" xml:space="preserve">
+    <value>Start</value>
+  </data>
+  <data name="Top" xml:space="preserve">
+    <value>Top</value>
+  </data>
+  <data name="Undo" xml:space="preserve">
+    <value>Undo</value>
+  </data>
+  <data name="Volume" xml:space="preserve">
+    <value>Volume</value>
+  </data>
+  <data name="Welcome" xml:space="preserve">
+    <value>Welcome</value>
+  </data>
+  <data name="WinTheGame" xml:space="preserve">
+    <value>WIN THE GAME</value>
+  </data>
+  <data name="AboutPointsExplain" xml:space="preserve">
+    <value>Comming soon.</value>
+  </data>
+  <data name="GameEnded" xml:space="preserve">
+    <value>GAME ENDED</value>
+  </data>
+  <data name="GameEndedExplain" xml:space="preserve">
+    <value>If there is a new winner append, game ended, or if there is no winner when each of players reach the max steps, game will end.</value>
+  </data>
+  <data name="PlaceAChessExplain" xml:space="preserve">
+    <value>Just need to put you chess on the intersection of lines.Taking turns the players place this pieces on the board</value>
+  </data>
+  <data name="WinTheGameExplain" xml:space="preserve">
+    <value>A player win only when first complete place three chess in one line</value>
+  </data>
+  <data name="ModifyTime" xml:space="preserve">
+    <value>ModifyTime</value>
+  </data>
+  <data name="AboutGameMode" xml:space="preserve">
+    <value>About Game Mode</value>
+  </data>
+  <data name="AboutGameModeExplain" xml:space="preserve">
+    <value>AI-AI : For test.
+Human-AI : AI Challenge, will record score.
+Free Mode : Allow local player vs local player, but the it won't record in player's score.
+Online : Online players  Challenge, will record score.</value>
+  </data>
+  <data name="AboutScore" xml:space="preserve">
+    <value>About Score(On  built)</value>
+  </data>
+  <data name="AboutScoreExplain" xml:space="preserve">
+    <value>Win : Get one point
+Fail : Lost one point
+Drawn : Null</value>
+  </data>
+  <data name="Drawn" xml:space="preserve">
+    <value>Drawn</value>
+  </data>
+  <data name="Fail" xml:space="preserve">
+    <value>Fail</value>
+  </data>
+  <data name="NickName" xml:space="preserve">
+    <value>Nick name</value>
+  </data>
+  <data name="Win" xml:space="preserve">
+    <value>Win</value>
+  </data>
+  <data name="Password" xml:space="preserve">
+    <value>Password</value>
+  </data>
+  <data name="UserName" xml:space="preserve">
+    <value>User name</value>
+  </data>
+  <data name="ConfirmPassword" xml:space="preserve">
+    <value>Confirm Password</value>
+  </data>
+  <data name="LogAccount" xml:space="preserve">
+    <value>Remember me</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="ClickToRefresh" xml:space="preserve">
+    <value>Click to refresh</value>
+  </data>
+  <data name="Login" xml:space="preserve">
+    <value>Login</value>
+  </data>
+  <data name="SignUp" xml:space="preserve">
+    <value>Sign up</value>
+  </data>
+  <data name="TotalTimes" xml:space="preserve">
+    <value>Total times</value>
+  </data>
+  <data name="Guest" xml:space="preserve">
+    <value>Guest</value>
+  </data>
+  <data name="LoginRequestTips" xml:space="preserve">
+    <value>You are not login that will case your history store in guest account.Login now?</value>
+  </data>
+  <data name="Message" xml:space="preserve">
+    <value>Message</value>
+  </data>
+  <data name="OK" xml:space="preserve">
+    <value>OK</value>
+  </data>
+  <data name="PrimaryPlayer" xml:space="preserve">
+    <value>Primary Player</value>
+  </data>
+  <data name="RequireLogin" xml:space="preserve">
+    <value>Require Login</value>
+  </data>
+  <data name="SecondaryPlayer" xml:space="preserve">
+    <value>Secondary Player</value>
+  </data>
+  <data name="TieEnded" xml:space="preserve">
+    <value>Game ended in a tie</value>
+  </data>
+  <data name="Time" xml:space="preserve">
+    <value>Time</value>
+  </data>
+  <data name="AIPlayer" xml:space="preserve">
+    <value>AI Player</value>
+  </data>
+  <data name="AIPlayer2" xml:space="preserve">
+    <value>AI Player2</value>
+  </data>
+  <data name="Guest2" xml:space="preserve">
+    <value>Guest2</value>
+  </data>
+  <data name="SelectLevel" xml:space="preserve">
+    <value>Select Level</value>
+  </data>
+  <data name="SelectStart" xml:space="preserve">
+    <value>Select start player</value>
+  </data>
+  <data name="StartNewGame" xml:space="preserve">
+    <value>Start new game</value>
+  </data>
+  <data name="Tips" xml:space="preserve">
+    <value>Tips</value>
+  </data>
+  <data name="AdvancedAI" xml:space="preserve">
+    <value>Advanced AI</value>
+  </data>
+  <data name="ElementaryAI" xml:space="preserve">
+    <value>Elementary AI</value>
+  </data>
+  <data name="IntermediateAI" xml:space="preserve">
+    <value>Intermediate AI</value>
+  </data>
+  <data name="Account" xml:space="preserve">
+    <value>Account</value>
+  </data>
+  <data name="ChangeLang" xml:space="preserve">
+    <value>Change language</value>
+  </data>
+  <data name="AboutApp" xml:space="preserve">
+    <value>This is a game for software engineer coure design which develop using c#.</value>
+  </data>
+  <data name="AboutOpenSource" xml:space="preserve">
+    <value>This project is open source but only for learnning.</value>
+  </data>
+  <data name="AppName" xml:space="preserve">
+    <value>GoLine</value>
+  </data>
+  <data name="AppRequire" xml:space="preserve">
+    <value>Require .Net framework 4.5.2 for running</value>
+  </data>
+  <data name="Reference" xml:space="preserve">
+    <value>Reference</value>
+  </data>
+  <data name="VisitGithub" xml:space="preserve">
+    <value>Visit Github</value>
+  </data>
+  <data name="AutoNoticeNewest" xml:space="preserve">
+    <value>Auto notice newest</value>
+  </data>
+  <data name="BoardLineColor" xml:space="preserve">
+    <value>Board line color</value>
+  </data>
+  <data name="ChessBrush" xml:space="preserve">
+    <value>Chess Brush</value>
+  </data>
+  <data name="Me" xml:space="preserve">
+    <value>Me</value>
+  </data>
+  <data name="Off" xml:space="preserve">
+    <value>Off</value>
+  </data>
+  <data name="On" xml:space="preserve">
+    <value>On</value>
+  </data>
+  <data name="OtherSetting" xml:space="preserve">
+    <value>Other Setting</value>
+  </data>
+  <data name="Sounds" xml:space="preserve">
+    <value>Sounds</value>
+  </data>
+  <data name="PasswordNotSame" xml:space="preserve">
+    <value>Password is not the same!</value>
+  </data>
+  <data name="PSWEmptyTips" xml:space="preserve">
+    <value>Password can't be empty!</value>
+  </data>
+  <data name="UserNameEmptyTips" xml:space="preserve">
+    <value>UserName can't be empty!</value>
+  </data>
+  <data name="ConnectFail" xml:space="preserve">
+    <value>Can't connect to network</value>
+  </data>
+  <data name="EmptyUserNameOrPsw" xml:space="preserve">
+    <value>Empty userName/password!</value>
+  </data>
+  <data name="GenerateRecordFail" xml:space="preserve">
+    <value>Generate record fail</value>
+  </data>
+  <data name="OtherError" xml:space="preserve">
+    <value>Other error</value>
+  </data>
+  <data name="Success" xml:space="preserve">
+    <value>Success</value>
+  </data>
+  <data name="UserExist" xml:space="preserve">
+    <value>Account exists!</value>
+  </data>
+  <data name="UserNotExist" xml:space="preserve">
+    <value>User not exist!</value>
+  </data>
+  <data name="WrongPassword" xml:space="preserve">
+    <value>Wrong password</value>
+  </data>
+  <data name="UpdateTime" xml:space="preserve">
+    <value>Update</value>
+  </data>
+  <data name="SoundsEffects" xml:space="preserve">
+    <value>Sounds effects</value>
+  </data>
+  <data name="DebugExplain" xml:space="preserve">
+    <value>You are now in debug mode, app won't auto restart because of debug mode is not use the same config/setting file for app in visual studio,it needs to restart project by yourselft.</value>
+  </data>
+  <data name="DebugMode" xml:space="preserve">
+    <value>Debug mode</value>
+  </data>
+  <data name="TestingTips" xml:space="preserve">
+    <value>It's in testing!</value>
+  </data>
+  <data name="IP" xml:space="preserve">
+    <value>IP</value>
+  </data>
+  <data name="Port" xml:space="preserve">
+    <value>Port</value>
+  </data>
+  <data name="SetConnection" xml:space="preserve">
+    <value>Set connection</value>
+  </data>
+  <data name="ImHost" xml:space="preserve">
+    <value>ImHost</value>
+  </data>
+  <data name="LocalPort" xml:space="preserve">
+    <value>Local port</value>
+  </data>
+  <data name="Ready" xml:space="preserve">
+    <value>Ready</value>
+  </data>
+  <data name="AlwaysAllowPay" xml:space="preserve">
+    <value>Always allow pay</value>
+  </data>
+  <data name="PayCode" xml:space="preserve">
+    <value>Pay code</value>
+  </data>
+  <data name="PayForIt" xml:space="preserve">
+    <value>Pay for it</value>
+  </data>
+</root>

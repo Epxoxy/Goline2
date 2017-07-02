@@ -1,9 +1,5 @@
 ﻿using NetworkService;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace LogicUnit
 {
@@ -17,16 +13,21 @@ namespace LogicUnit
             this.onRelay = onRelay;
         }
 
-        public override bool Relay(Message msg)
+        public void Send(Message msg)
         {
-            onRelay?.Invoke(this, msg);
-            return true;
+            msg.Token = Token;
+            bridgeOf(msg);
         }
 
-        //Pass a message to message center
-        public void Pass(Message msg)
+        public void SendByToken(string token, Message msg)
         {
-            this.onMessage(msg);
+            msg.Token = token;
+            bridgeOf(msg);
+        }
+
+        public override void Relay(Message msg)
+        {
+            onRelay?.Invoke(this, msg);
         }
 
         protected override void onDispose()

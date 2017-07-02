@@ -1,0 +1,34 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<language>
+  <resources>
+    <resource name="About">About</resource>
+    <resource name="AboutPoints">AboutPoints</resource>
+    <resource name="AIVSAI">AIVSAI</resource>
+    <resource name="Back">Back</resource>
+    <resource name="Exit">Exit</resource>
+    <resource name="Front">Front</resource>
+    <resource name="Help">Help</resource>
+    <resource name="ID">ID</resource>
+    <resource name="Menu">Menu</resource>
+    <resource name="Music">Music</resource>
+    <resource name="Name">Name</resource>
+    <resource name="Newest">Newest</resource>
+    <resource name="Next">Next</resource>
+    <resource name="Online">Online</resource>
+    <resource name="Other">Other</resource>
+    <resource name="PlaceAChess">PlaceAChess</resource>
+    <resource name="PVE">PVE</resource>
+    <resource name="PVP">PVP</resource>
+    <resource name="Reset">Reset</resource>
+    <resource name="Score">Score</resource>
+    <resource name="SelectMode">SelectMode</resource>
+    <resource name="Settings">Settings</resource>
+    <resource name="Specials">Specials</resource>
+    <resource name="Start">Start</resource>
+    <resource name="Top">Top</resource>
+    <resource name="Undo">Undo</resource>
+    <resource name="Volume">Volume</resource>
+    <resource name="Welcome">Welcome</resource>
+    <resource name="WinTheGame">WinTheGame</resource>
+  </resources>
+</language>

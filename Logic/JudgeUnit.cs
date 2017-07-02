@@ -14,87 +14,85 @@ namespace LogicUnit
 
         public TimeSpan Elapsed { get; private set; }
 
-        public Player First { get; private set; }
-        public Player Actived { get; private set; }
-        public Player Winner { get; private set; }
-        public Player Next => Actived == null ? null : Actived.Next;
-        public Player Front => Actived == null ? null : Actived.Front;
+        public string FirstToken => First == null ? null : First.Token;
+        public string ActiveToken => Active == null ? null : Active.Token;
+        public string WinnerToken => Winner == null ? null : Winner.Token;
+
+        private DataExtra First { get; set; }
+        private DataExtra Active { get; set; }
+        private DataExtra Winner { get; set; }
 
         public bool IsStarted { get; private set; }
         public bool IsAttached { get; private set; }
 
-        private Dictionary<string, Player> players { get; set; }
-        private Dictionary<string, PlayerExtra> extras { get; set; }
-        private Restriction restriction;
-        private DataBox dataBox;
+        private Dictionary<string, DataExtra> extras { get; set; }
+        private MapFormation map;
+        private DataBox dataBox => map.DataBox;
         private object lockHelper = new object();
+        private object judgeLockHelper = new object();
 
-        public JudgeUnit(Restriction rst)
+        public JudgeUnit(MapFormation map)
         {
-            this.restriction = rst;
-            dataBox = new DataBox(rst.EntryCopy(), rst.Allow, rst.NotAllow);
+            this.map = map;
         }
 
         public IMap GetMap()
         {
-            return restriction;
+            return map;
         }
 
         //When gameMaster is attach,you can join a valid player
         //before game start
-        public bool Join(Player player)
+        public bool Join(ref string rsToken)
         {
-            if (player == null || !IsAttached || IsStarted)
+            if (!IsAttached || IsStarted)
                 return false;
             lock (lockHelper)
             {
-                if (players.ContainsValue(player)) return true;
-                if (players.Count >= restriction.MaxPlayer) return false;
+                if (extras.Count >= map.MaxPlayer) return false;
                 string token = TokenHelper.NewToken();
-                player.Token = token;
 
-                if (players.Count > 0)
+                var current = new DataExtra
                 {
-                    var first = players.First().Value;
-                    var last = players.Last().Value;
-                    last.Next = player;
-                    player.Front = last;
-                    player.Next = first;
+                    Token = token,
+                    BoxId = extras.Count + 2,
+                    Watcher = new Watcher()
+                };
+                rsToken = token;
+                if (extras.Count > 0)
+                {
+                    var first = extras.First().Value;
+                    var last = extras.Last().Value;
+                    last.Next = current;
+                    current.Front = last;
+                    current.Next = first;
                 }
-                players.Add(token, player);
-                extras.Add(token, new PlayerExtra()
-                {
-                    BoxId = players.Count + 1
-                });
-                player.Judge = this;
-                player.IsAttached = true;
-                System.Diagnostics.Debug.WriteLine($"Player[{player.Name}] Joined. Token[{token}]");
+                extras.Add(token, current);
+                System.Diagnostics.Debug.WriteLine($"New Joined. Token[{token}]");
                 raiseJudged(token, JudgeCode.Joined);
-                if (players.Count == 1)
-                    SignAsFirst(player.Token);
-
+                if (extras.Count == 1)
+                    SignAsFirst(current.Token);
                 return true;
             }
         }
 
         public bool Leave(string token)
         {
-            if (string.IsNullOrEmpty(token) || !IsAttached || IsStarted || players.Count < 1)
+            if (string.IsNullOrEmpty(token) || !IsAttached || IsStarted || extras.Count < 1)
                 return false;
             lock (lockHelper)
             {
-                if (players.ContainsKey(token))
+                if (extras.ContainsKey(token))
                 {
-                    var player = players[token];
-                    players.Remove(token);
+                    var extra = extras[token];
+                    extra.Watcher.Dispose();
                     extras.Remove(token);
-                    player.Judge = null;
 
-                    var front = player.Front;
-                    var next = player.Next;
+                    var front = extra.Front;
+                    var next = extra.Next;
                     front.Next = next;
 
-                    System.Diagnostics.Debug.WriteLine($"Player[{player.Name}] Leave.");
+                    System.Diagnostics.Debug.WriteLine($"token[{extra.Token}] Leave.");
                     raiseJudged(token, JudgeCode.Leave);
                     return true;
                 }
@@ -108,31 +106,25 @@ namespace LogicUnit
 
         public bool GiveUp(string token)
         {
-            if (string.IsNullOrEmpty(token) || !IsStarted || players.Count < 1) return false;
+            if (string.IsNullOrEmpty(token) || !IsStarted || extras.Count < 1) return false;
             lock (lockHelper)
             {
-                if (players.ContainsKey(token))
+                if (extras.ContainsKey(token))
                 {
-                    var player = players[token];
-                    if (player.IsActive)
-                    {
-                        var watch = extras[token];
-                        extras.Remove(token);
-                        watch.Dispose();
-                    }
-                    players.Remove(token);
-                    player.Judge = null;
+                    var extra = extras[token];
+                    extra.Watcher.Dispose();
+                    extras.Remove(token);
 
-                    var front = player.Front;
-                    var next = player.Next;
+                    var front = extra.Front;
+                    var next = extra.Next;
                     front.Next = next;
 
-                    if (IsStarted && players.Count == 1)
+                    if (IsStarted && extras.Count == 1)
                         onWinnerAppend(front.Token);
                     else
                         tryActive(next);
 
-                    System.Diagnostics.Debug.WriteLine($"Player[{player.Name}] Leave.");
+                    System.Diagnostics.Debug.WriteLine($"token[{token}] Leave.");
                     raiseJudged(token, JudgeCode.GiveUp);
                     return true;
                 }
@@ -147,9 +139,9 @@ namespace LogicUnit
         public bool SignAsFirst(string token)
         {
             if (string.IsNullOrEmpty(token) || !IsAttached || IsStarted 
-                || !players.ContainsKey(token))
+                || !extras.ContainsKey(token))
                 return false;
-            First = players[token];
+            First = extras[token];
             raiseJudged(token, JudgeCode.MarkFirst);
             return true;
         }
@@ -157,23 +149,20 @@ namespace LogicUnit
         public void Attach()
         {
             IsAttached = true;
-            players = new Dictionary<string, Player>();
-            extras = new Dictionary<string, PlayerExtra>();
+            extras = new Dictionary<string, DataExtra>();
         }
 
         public void Detach()
         {
-            players.Clear();
-            foreach(var ex in extras.Values)
-                ex.Dispose();
+            foreach (var pair in extras.Values)
+                pair.Watcher.Dispose();
             extras.Clear();
-            players = null;
             extras = null;
         }
         
         public bool Ready(string token)
         {
-            if (string.IsNullOrEmpty(token) || !IsAttached || IsStarted || players.Count < 1)
+            if (string.IsNullOrEmpty(token) || !IsAttached || IsStarted || extras.Count < 1)
                 return false;
             if (extras.ContainsKey(token))
             {
@@ -181,7 +170,7 @@ namespace LogicUnit
                 {
                     extras[token].IsReady = true;
                     raiseJudged(token, JudgeCode.Ready);
-                    if (extras.Count >= restriction.MinPlayer 
+                    if (extras.Count >= map.MinPlayer 
                         && extras.Count(ex => ex.Value.IsReady) == extras.Count)
                         Start();
                 }
@@ -192,7 +181,8 @@ namespace LogicUnit
 
         public bool Start()
         {
-            if(IsAttached && !IsStarted && players.Count >= restriction.MinPlayer)
+            this.Winner = null;
+            if(IsAttached && !IsStarted && extras.Count >= map.MinPlayer)
             {
                 if (extras.Count(ex => ex.Value.IsReady) == extras.Count)
                 {
@@ -210,10 +200,22 @@ namespace LogicUnit
             if (IsStarted)
             {
                 IsStarted = false;
-                foreach (var ex in extras.Values)
-                    ex.Dispose();
+                foreach (var pair in extras.Values)
+                    pair.Watcher.Dispose();
                 raiseJudged(string.Empty, JudgeCode.Ended);
             }
+        }
+
+        public void Reset()
+        {
+            dataBox.ResetData();
+            foreach (var pair in extras.Values)
+            {
+                pair.Watcher.StopStopwatch();
+                pair.Watcher.ResetStopwatch();
+            }
+            raiseJudged(string.Empty, JudgeCode.Reset);
+            Start();
         }
 
         public bool HandInput(string token, InputAction action)
@@ -221,7 +223,7 @@ namespace LogicUnit
             bool isOk = false;
             lock (lockHelper)
             {
-                if (!string.IsNullOrEmpty(token) && players.ContainsKey(token))
+                if (!string.IsNullOrEmpty(token) && extras.ContainsKey(token))
                 {
                     switch (action.Type)
                     {
@@ -238,25 +240,13 @@ namespace LogicUnit
                             isOk = Ready(token);
                             break;
                         case ActionType.Input:
-                            if (IsStarted && Actived.Token == token)
-                            {
-                                isOk = inputToBox(action.Data, extras[token].BoxId);
-                                if (isOk)
-                                {
-                                    raiseJudged(token, JudgeCode.Inputed, action);
-                                    if (isEnded()) End();
-                                    else tryActive(players[token].Next);
-                                }
-                            }
+                            isOk = recordInput(token, action);
                             break;
                         case ActionType.Undo:
-                            DataPoint p;
-                            isOk = dataBox.Undo(out p);
+                            if (token != Active.Token) break;
+                            isOk = undoRecord(token, action);
                             break;
-                        case ActionType.Redo:
-                            //Not support now
-                            //DataPoint rp;
-                            //accepted = dataBox.Redo(out rp);
+                        case ActionType.AllowUndo:
                             break;
                     }
                 }
@@ -272,12 +262,7 @@ namespace LogicUnit
             }
             return -1;
         }
-
-        internal int[,] CurrentData()
-        {
-            return dataBox.Copy();
-        }
-
+        
         private bool isEnded()
         {
             return dataBox.ReachableCount == 0;
@@ -285,49 +270,150 @@ namespace LogicUnit
 
         private void raiseJudged(string token, JudgeCode code, object extra = null)
         {
-            OnJudged?.Invoke(token, code, extra);
+            lock (judgeLockHelper)
+            {
+                OnJudged?.Invoke(token, code, extra);
+            }
         }
 
-        private bool inputToBox(object data, int mark)
+        private bool undoRecord(string token, InputAction action)
+        {
+            int boxId = GetBoxId(token);
+            if (boxId > 0)
+            {
+                DataPoint p;
+                bool undo = false;
+                do
+                {
+                    undo = dataBox.Undo(out p);
+                    if (undo)
+                    {
+                        action.Data = new IntPoint(p.X, p.Y);
+                        raiseJudged(token, JudgeCode.Undo, action);
+                    }
+                } while (undo && p.Data != boxId);
+                if(undo && p.Data == boxId)
+                    return true;
+            }
+            return false;
+        }
+
+        private bool undoRecord(string token, string undoToken, InputAction action)
+        {
+            bool isOk = false;
+            int boxId = GetBoxId(token);
+            if (boxId > 0)
+            {
+                DataPoint p;
+                bool undo = false;
+                do
+                {
+                    undo = dataBox.Undo(out p);
+                    if (undo)
+                    {
+                        action.Data = new IntPoint(p.X, p.Y);
+                        raiseJudged(token, JudgeCode.Undo, action);
+                    }
+                } while (undo && p.Data != boxId);
+                tryActive(extras[token]);
+                isOk = undo && p.Data == boxId;
+            }
+            return isOk;
+        }
+
+        private bool recordInput(string token, InputAction action)
+        {
+            bool isOk = false;
+            if (IsStarted && Active.Token == token)
+            {
+                isOk = recordToBox(token, action.Data, extras[token].BoxId);
+                if (isOk)
+                {
+                    raiseJudged(token, JudgeCode.Input, action);
+                    if (isNewWinnerAppend())
+                    {
+                        raiseJudged(token, JudgeCode.NewWinner);
+                        End();
+                    }
+                    else
+                    {
+                        if (isEnded()) End();
+                        else tryActive(extras[token].Next);
+                    }
+                }
+            }
+            return isOk;
+        }
+
+        private bool recordToBox(string token, object data, int mark)
         {
             if(data is IntPoint)
             {
                 var p = (IntPoint)data;
-                return dataBox.Record(p.X, p.Y, mark);
+                bool isOk = dataBox.Record(p.X, p.Y, mark);
+                if (isOk)
+                {
+                    var lines = GetMap().LinesOf(p);
+                    foreach(var line in lines)
+                    {
+                        var points = line.ToPoints();
+                        int count = 0;
+                        foreach (var point in points)
+                        {
+                            if (dataBox.IsDataIn(point.X, point.Y, mark))
+                                ++count;
+                        }
+                        if(count == 3)
+                        {
+                            this.Winner = extras[token];
+                            break;
+                        }
+                    }
+                }
+                return isOk;
             }
             return false;
         }
 
         private void onWinnerAppend(string token)
         {
-            Winner = players[token];
+            Winner = extras[token];
             if (IsStarted) End();
             raiseJudged(token, JudgeCode.NewWinner);
         }
 
-        private void tryActive(Player player)
+        private void tryActive(DataExtra extra)
         {
-            if (Actived != null)
+            if (Active != null)
             {
-                Actived.IsActive = false;
-                extras[Actived.Token].PauseStopwatch();
+                Active.IsActive = false;
+                extras[Active.Token].Watcher.PauseStopwatch();
             }
-            Actived = player;
-            Actived.IsActive = true;
-            extras[Actived.Token].EnsureStopwatch();
-            raiseJudged(player.Token, JudgeCode.Actived);
+            Active = extra;
+            Active.IsActive = true;
+            extras[Active.Token].Watcher.EnsureStopwatch();
+            raiseJudged(extra.Token, JudgeCode.Active);
         }
 
         private bool isNewWinnerAppend()
         {
-            return false;
+            return Winner != null;
+        }
+        
+        private class DataExtra
+        {
+            public int BoxId { get; set; }
+            public string Token { get; set; }
+            public bool IsActive { get; set; }
+            public bool IsReady { get; set; }
+            public DataExtra Next { get; set; }
+            public DataExtra Front { get; set; }
+            public Watcher Watcher { get; set; }
         }
 
-        private class PlayerExtra : IDisposable
+        private class Watcher : IDisposable
         {
             private System.Diagnostics.Stopwatch stopwatch;
-            internal int BoxId { get; set; }
-            internal bool IsReady { get; set; }
             public TimeSpan TimeSpan
             {
                 get
@@ -367,12 +453,17 @@ namespace LogicUnit
 
             public void Dispose()
             {
-                IsReady = false;
                 ClearStopwatch();
             }
         }
-
     }
+
+    public class JudgeResult
+    {
+        public JudgeCode Code { get; set; }
+        public object Extra { get; set; }
+    }
+
     public enum JudgeCode
     {
         Joined,
@@ -380,11 +471,12 @@ namespace LogicUnit
         GiveUp,
         Ready,
         MarkFirst,
-        Actived,
-        Accepted,
-        Inputed,
+        Active,
+        Undo,
+        Input,
         NewWinner,
         Started,
-        Ended
+        Ended,
+        Reset
     }
 }

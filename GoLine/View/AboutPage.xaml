@@ -1,0 +1,41 @@
+﻿<Page x:Class="GoLine.AboutPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:props="clr-namespace:GoLine.Properties"
+      xmlns:local="clr-namespace:GoLine"
+      mc:Ignorable="d" Background="White"
+      MaxWidth="450"
+      d:DesignHeight="300" d:DesignWidth="450"
+      Title="AboutPage">
+    <ItemsControl VerticalAlignment="Top" Margin="12,7">
+        <TextBlock >
+            <Run Text="{x:Static props:Resources.About}" Foreground="DimGray" FontSize="25" />
+            <Run Text="&#xA;&#xA;" FontSize="18"/>
+            <Run Text="{x:Static props:Resources.AppName}" FontSize="18"/>
+            <Run Text="&#xA;@Encrypt5px" FontSize="14"/>
+        </TextBlock>
+        <TextBlock TextWrapping="WrapWithOverflow">
+            <Run Text="&#xA;"/>
+            <Run Text="{x:Static props:Resources.AboutApp}" Foreground="DimGray" FontSize="18" />
+            <Run Text="&#xA;"/>
+            <Run Text="{x:Static props:Resources.AppRequire}" Foreground="DimGray" FontSize="18" />
+            <Run Text="&#xA;"/>
+        </TextBlock>
+        <TextBlock>
+                <Run Text="{x:Static props:Resources.AboutOpenSource}" Foreground="DimGray" FontSize="16"/>
+        <Hyperlink NavigateUri="https://github.com/Encrypt5px" TargetName="He" RequestNavigate="OnHyperlinkRequestNavigate">
+                <Run Text="&#xA;" FontSize="16"/>    
+                <Run Text="{x:Static props:Resources.VisitGithub}" FontSize="16"/>    
+            </Hyperlink>
+        </TextBlock>
+        <TextBlock>
+            <Run Text="{x:Static props:Resources.Reference}" FontSize="18"/>
+            <Hyperlink NavigateUri="https://github.com/Encrypt5px" TargetName="He" RequestNavigate="OnHyperlinkRequestNavigate">
+                <Run Text="&#xA;Add Reference" FontSize="16"/>    
+            </Hyperlink>
+        </TextBlock>
+        <TextBlock Text="CopyRight 2016.11.01" Foreground="DimGray" FontSize="16"/>
+    </ItemsControl>
+</Page>

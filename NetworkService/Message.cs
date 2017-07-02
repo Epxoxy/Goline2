@@ -5,7 +5,7 @@ namespace NetworkService
     [Serializable]
     public class Message
     {
-        public string Token { get; private set; }
+        public string Token { get; set; }
         public object Content { get; private set; }
         public MessageType Type { get; private set; }
         
@@ -47,6 +47,7 @@ namespace NetworkService
     public enum MessageType
     {
         Heartbeat,
+        Proxy,
         Action,
         Judge,
         Fallback,

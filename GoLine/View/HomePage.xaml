@@ -1,0 +1,170 @@
+﻿<Page xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity" 
+      xmlns:ei="http://schemas.microsoft.com/expression/2010/interactions"
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:GoLine"
+      xmlns:sys="clr-namespace:System;assembly=mscorlib"
+      xmlns:props="clr-namespace:GoLine.Properties"
+      x:Class="GoLine.HomePage"
+      mc:Ignorable="d" 
+      d:DesignHeight="600" d:DesignWidth="540"
+      Title="HomePage">
+    <Page.Resources>
+        <Style x:Key="DymicHeader" TargetType="{x:Type HeaderedContentControl}">
+            <Setter Property="VerticalAlignment" Value="Bottom" />
+        </Style>
+    </Page.Resources>
+    <Grid>
+        <Grid.Background>
+            <ImageBrush Stretch="UniformToFill" ImageSource="/GoLine;component/Resources/Bg/background0.jpg" />
+        </Grid.Background>
+        <Grid x:Name="HomeRoot">
+            <!--#region VerticalAlignment-->
+            <Grid HorizontalAlignment="Center" >
+                <Grid.RowDefinitions>
+                    <RowDefinition />
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <HeaderedContentControl VerticalAlignment="Center">
+                    <HeaderedContentControl.Header>
+                        <TextBlock Text="{x:Static props:Resources.Welcome}" FontSize="40" FontWeight="Light" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,12"/>
+                    </HeaderedContentControl.Header>
+                    <Grid>
+                        <!--<Button x:Name="Start1Btn" Content="{x:Static props:Resources.Start}" Style="{StaticResource SpecialNormalButtonStyle}">
+                            <i:Interaction.Triggers>
+                                <i:EventTrigger EventName="Click">
+                                    <ei:ChangePropertyAction PropertyName="IsOpen" TargetObject="{Binding ElementName=ModeSelection, Mode=OneWay}"
+                                                     Value="{StaticResource Boolean.True}"/>
+                                </i:EventTrigger>
+                            </i:Interaction.Triggers>
+                        </Button>-->
+                        <Button x:Name="StartBtn" Style="{StaticResource SpreadEllipseBtnStyle}" Height="200" Width="200" Margin="20">
+                            <i:Interaction.Triggers>
+                                <i:EventTrigger EventName="Click">
+                                    <ei:ChangePropertyAction PropertyName="IsOpen" TargetObject="{Binding ElementName=ModeSelection, Mode=OneWay}"
+                                                     Value="{StaticResource Boolean.True}"/>
+                                </i:EventTrigger>
+                                <i:EventTrigger EventName="MouseEnter">
+                                    <ei:GoToStateAction StateName="Split" TargetObject="{Binding ElementName=StartRoot}"/>
+                                </i:EventTrigger>
+                                <i:EventTrigger EventName="MouseLeave">
+                                    <ei:GoToStateAction StateName="Combine" TargetObject="{Binding ElementName=StartRoot}"/>
+                                </i:EventTrigger>
+                            </i:Interaction.Triggers>
+                            <Grid x:Name="StartRoot">
+                                <VisualStateManager.VisualStateGroups>
+                                    <VisualStateGroup x:Name="Show">
+                                        <VisualState x:Name="Split">
+                                            <Storyboard>
+                                                <DoubleAnimation Storyboard.TargetName="Path" Storyboard.TargetProperty="Opacity" To="1" Duration="0:0:0.2"/>
+                                                <DoubleAnimation Storyboard.TargetName="Path"  Storyboard.TargetProperty="(Control.RenderTransform).(TranslateTransform.X)"
+                                                         To="-50" Duration="0:0:0.1" EasingFunction="{StaticResource CubicEaseOut}"/>
+                                                <DoubleAnimation Storyboard.TargetName="TextBlock" Storyboard.TargetProperty="(Control.RenderTransform).(TranslateTransform.X)"
+                                                         To="30" Duration="0:0:0.1" EasingFunction="{StaticResource CubicEaseOut}"/>
+                                            </Storyboard>
+                                        </VisualState>
+                                        <VisualState x:Name="Combine">
+                                            <Storyboard >
+                                                <DoubleAnimation Storyboard.TargetName="Path" Storyboard.TargetProperty="Opacity"
+                                                         To="0"  Duration="0:0:0.2"/>
+                                                <DoubleAnimation Storyboard.TargetName="Path" Storyboard.TargetProperty="(Control.RenderTransform).(TranslateTransform.X)" 
+                                                         To="0" Duration="0:0:0.2" EasingFunction="{StaticResource CubicEaseOut}"/>
+                                                <DoubleAnimation Storyboard.TargetName="TextBlock" Storyboard.TargetProperty="(Control.RenderTransform).(TranslateTransform.X)"
+                                                         To="0" Duration="0:0:0.2" EasingFunction="{StaticResource CubicEaseOut}"/>
+                                            </Storyboard>
+                                        </VisualState>
+                                    </VisualStateGroup>
+                                </VisualStateManager.VisualStateGroups>
+                                <Path x:Name="Path" Data="M2,1 H4 M0,3 H2 M4,3 H6 M2,5 H4 M3,0 H0 V6 H3 M3,4 V6 H6 V0 H3 L5,2 V4 L3,6 1,4 L3,2 V0 L1,2 3,4 L5,2 H1 V4 H5 L3,2"
+                              StrokeLineJoin="Round" StrokeThickness="1" Margin="4" Opacity="0"
+                              Stroke="SkyBlue" Stretch="UniformToFill" Width="50" Height="50" HorizontalAlignment="Center">
+                                    <Path.RenderTransform>
+                                        <TranslateTransform X="0"/>
+                                    </Path.RenderTransform>
+                                </Path>
+                                <TextBlock x:Name="TextBlock" Grid.Column="1" Text="{x:Static props:Resources.Start}" FontSize="40" FontWeight="Light" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                    <TextBlock.RenderTransform>
+                                        <TranslateTransform X="0"/>
+                                    </TextBlock.RenderTransform>
+                                </TextBlock>
+                            </Grid>
+                        </Button>
+                    </Grid>
+                </HeaderedContentControl>
+                <local:MenuControl Grid.Row="1" Margin="0,0,0,20" MinWidth="250" HorizontalAlignment="Center" VerticalAlignment="Center"
+                                       Background="Transparent" ItemContainerStyle="{StaticResource SpecialEllipseButtonStyle}" 
+                                       ItemsPanel="{StaticResource HorizontalStackPanel}"/>
+
+                <!--SpecialEllipseButtonStyle SpecialNormalButtonStyle-->
+                <!--Horizontal-->
+                <!--<ItemsControl Margin="0,0,0,20" ItemsPanel="{StaticResource VerticalStackPanel}">
+                     <Button Content="{x:Static props:Resources.Account}" Click="AccountBtnClick" Style="{StaticResource SpecialEllipseButtonStyle}"/>
+                </ItemsControl>-->
+                <!--<Grid HorizontalAlignment="Center" >
+                    <Grid.RowDefinitions>
+                        <RowDefinition />
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <HeaderedContentControl VerticalAlignment="Center">
+                        <HeaderedContentControl.Header>
+                            <TextBlock Text="{x:Static props:Resources.Welcome}" FontSize="40" FontWeight="Light" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,12"/>
+                        </HeaderedContentControl.Header>
+                        <Grid>
+                            <Button x:Name="StartBtn" Content="{x:Static props:Resources.Start}" Style="{StaticResource SpecialNormalButtonStyle}">
+                                <i:Interaction.Triggers>
+                                    <i:EventTrigger EventName="Click">
+                                        <ei:ChangePropertyAction PropertyName="IsOpen" TargetObject="{Binding ElementName=ModeSelection, Mode=OneWay}"
+                                                     Value="{StaticResource Boolean.True}"/>
+                                    </i:EventTrigger>
+                                </i:Interaction.Triggers>
+                            </Button>
+                        </Grid>
+                    </HeaderedContentControl>
+                    <local:MenuControl Grid.Row="1" Margin="0,0,0,20" MinWidth="250" HorizontalAlignment="Center" VerticalAlignment="Center"
+                                       Background="Transparent" ItemContainerStyle="{StaticResource SpecialNormalButtonStyle}" 
+                                       ItemsPanel="{StaticResource VerticalStackPanel}"/>
+                </Grid>-->
+            </Grid>
+            <WrapPanel VerticalAlignment="Top"  HorizontalAlignment="Right" Margin="7,0">
+                <Button Margin="20,4" Style="{StaticResource ChagedForegroundButton}" Click="LoginStateBtnClick" >
+                    <TextBlock>
+                        <Run Text="&#xe70f; " FontSize="20" BaselineAlignment="Top" FontFamily="{StaticResource IconFont}"/>
+                        <Run Text="{x:Static props:Resources.Me}" FontSize="18" />
+                    </TextBlock>
+                </Button>
+                <Button FontSize="18" Canvas.Right="0" Content="{Binding NextLang, Source={x:Static props:Settings.Default}}" Style="{StaticResource ChagedForegroundButton}"
+                    Click="LangBtnClick"/>
+            </WrapPanel>
+            <local:FlyoutControl x:Name="ModeSelection" FadeInFrom="60" OpenOrientation="Vertical" VerticalContentAlignment="Bottom">
+                <Grid Background="{StaticResource F4F4F4Brush}">
+                    <HeaderedContentControl MinWidth="250" Padding="0,7,0,12" HorizontalAlignment="Center">
+                        <HeaderedContentControl.Header>
+                            <TextBlock Text="{x:Static props:Resources.SelectMode}" FontSize="40" FontWeight="Light" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,12"/>
+                        </HeaderedContentControl.Header>
+                        <StackPanel Orientation="Vertical">
+                            <!--Horizontal-->
+                            <ListView x:Name="ModeList" SelectionMode="Single" MinWidth="250" HorizontalAlignment="Center" VerticalAlignment="Center" BorderThickness="0" Padding="0"
+                          Background="Transparent" ItemContainerStyle="{StaticResource SpecialLightListViewItemStyle}"
+                          SelectionChanged="OnModeSelectionChanged" DisplayMemberPath="Display"
+                                      ItemsPanel="{StaticResource VerticalStackPanel}">
+                                <!--EllipseListViewItemStyle SpecialLightListViewItemStyle-->
+                                <!--HorizontalStackPanel-->
+                            </ListView>
+                            <!--SpecialEllipseButtonStyle-->
+                            <Button Content="{x:Static props:Resources.Back}" Style="{StaticResource SpecialNormalButtonStyle}">
+                                <i:Interaction.Triggers>
+                                    <i:EventTrigger EventName="Click">
+                                        <ei:ChangePropertyAction PropertyName="IsOpen" TargetObject="{Binding ElementName=ModeSelection, Mode=OneWay}"
+                                                     Value="{StaticResource Boolean.False}"/>
+                                    </i:EventTrigger>
+                                </i:Interaction.Triggers>
+                            </Button>
+                        </StackPanel>
+                    </HeaderedContentControl>
+                </Grid>
+            </local:FlyoutControl>
+        </Grid>
+    </Grid>
+</Page>

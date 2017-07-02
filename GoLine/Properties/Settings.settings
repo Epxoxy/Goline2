@@ -1,0 +1,62 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="GoLine.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="UsingLang" Type="System.String" Scope="User">
+      <Value Profile="(Default)">en-US</Value>
+    </Setting>
+    <Setting Name="FontSetting" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Microsoft YaHei</Value>
+    </Setting>
+    <Setting Name="NextLang" Type="System.String" Scope="User">
+      <Value Profile="(Default)">中文</Value>
+    </Setting>
+    <Setting Name="NewestLang" Type="System.String" Scope="User">
+      <Value Profile="(Default)">en-US</Value>
+    </Setting>
+    <Setting Name="StoredUser" Type="System.Collections.Specialized.StringCollection" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="ChessBrush" Type="System.String" Scope="User">
+      <Value Profile="(Default)">SkyBlue</Value>
+    </Setting>
+    <Setting Name="BgPath" Type="System.String" Scope="User">
+      <Value Profile="(Default)">pack://application:,,,/GoLine;component/Resources/Bg/bg.jpg</Value>
+    </Setting>
+    <Setting Name="AvaliableBrushes" Type="System.Collections.Specialized.StringCollection" Scope="User">
+      <Value Profile="(Default)">&lt;?xml version="1.0" encoding="utf-16"?&gt;
+&lt;ArrayOfString xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
+  &lt;string&gt;AliceBlue&lt;/string&gt;
+  &lt;string&gt;SkyBlue&lt;/string&gt;
+  &lt;string&gt;CadetBlue&lt;/string&gt;
+  &lt;string&gt;Green&lt;/string&gt;
+  &lt;string&gt;DimGray&lt;/string&gt;
+  &lt;string&gt;Orange&lt;/string&gt;
+  &lt;string&gt;MediumSeaGreen&lt;/string&gt;
+  &lt;string&gt;Plum&lt;/string&gt;
+  &lt;string&gt;Tan&lt;/string&gt;
+  &lt;string&gt;Violet&lt;/string&gt;
+  &lt;string&gt;#3f51b5&lt;/string&gt;
+  &lt;string&gt;#f57f17&lt;/string&gt;
+&lt;/ArrayOfString&gt;</Value>
+    </Setting>
+    <Setting Name="BoardLineBrush" Type="System.String" Scope="User">
+      <Value Profile="(Default)">DimGray</Value>
+    </Setting>
+    <Setting Name="AutoNoticeNewest" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="EnableSounds" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="EnableMusic" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="Volume" Type="System.Double" Scope="User">
+      <Value Profile="(Default)">50</Value>
+    </Setting>
+    <Setting Name="DebugMode" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>

@@ -8,8 +8,9 @@
         Leave,
         Input,
         Undo,
-        Redo,
+        AllowUndo,
         GiveUp,
-        AskHost
+        AskHost,
+        Reset
     }
 }

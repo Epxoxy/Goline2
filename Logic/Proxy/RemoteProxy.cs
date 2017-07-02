@@ -9,7 +9,9 @@ namespace LogicUnit
 {
     class RemoteProxy : ProxyBase
     {
+        public bool Connected => connector.IsConnected;
         private Connector connector;
+        private string remoteToken;
 
         public RemoteProxy(Connector connector)
         {
@@ -31,12 +33,18 @@ namespace LogicUnit
 
         private void onMessageReceived(Message msg)
         {
-            this.onMessage(msg);
+            if (msg.Type == MessageType.Proxy)
+                remoteToken = msg.Token;
+            if (!string.IsNullOrEmpty(remoteToken) && msg.Token == remoteToken)
+                msg.Token = Token;
+            bridgeOf(msg);
         }
 
-        public override bool Relay(Message msg)
+        public override void Relay(Message msg)
         {
-            return connector.SendObject(msg);
+            if(!string.IsNullOrEmpty(remoteToken) && msg.Token == Token)
+                msg.Token = remoteToken;
+            connector.SendObject(msg);
         }
 
         protected override void onDispose()

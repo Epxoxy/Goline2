@@ -63,10 +63,10 @@ namespace LogicUnit
         //Reset a recorded point to default value
         public bool Reset(int x, int y)
         {
-            if(x< datas.GetLength(1) && y < datas.GetLength(0))
+            if(x< datas.GetLength(0) && y < datas.GetLength(1))
             {
                 int data = datas[x, y];
-                if(data > ok && data < no)
+                if(data > ok && data != no)
                 {
                     --ReachableCount;
                     --stepCountor[data];
@@ -77,6 +77,11 @@ namespace LogicUnit
             return false;
         }
         
+        public bool IsDataIn(int x, int y, int value)
+        {
+            int data = datas[x, y];
+            return data == value;
+        }
 
         internal bool Undo(out DataPoint dp)
         {

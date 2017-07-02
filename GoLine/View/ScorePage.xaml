@@ -1,0 +1,45 @@
+﻿<Page x:Class="GoLine.ScorePage"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:GoLine"
+             xmlns:array="clr-namespace:System.Collections;assembly=mscorlib"
+      xmlns:props="clr-namespace:GoLine.Properties"
+             mc:Ignorable="d" Background="White"
+             d:DesignHeight="300" d:DesignWidth="500">
+    <Grid x:Name="ScorePart" MinWidth="500" MaxWidth="700">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition />
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <TextBlock Foreground="DimGray" HorizontalAlignment="Center" Margin="0,7">
+                    <Run Text="{x:Static props:Resources.Top}" FontSize="25"/>
+        </TextBlock>
+        <Rectangle x:Name="Processing" Height="3" Fill="#FF58BB92" Width="0" IsEnabled="False" HorizontalAlignment="Left" 
+                       VerticalAlignment="Top"
+                       Style="{StaticResource ProcessRectstyle}"/>
+        <ListView x:Name="ItemListView" Grid.Row="1" BorderThickness="0" HorizontalAlignment="Center"
+                      ItemContainerStyle="{StaticResource GridViewItemStyle}" ScrollViewer.CanContentScroll="False"
+                  ScrollViewer.VerticalScrollBarVisibility="Hidden"
+                      Stylus.IsFlicksEnabled="True">
+            <ListView.View>
+                <GridView ColumnHeaderContainerStyle="{StaticResource GridViewColumnHeaderStyle}">
+                    <GridView.Columns>
+                        <GridViewColumn Header="{x:Static props:Resources.ID}" DisplayMemberBinding="{Binding ScoreID}"/>
+                        <GridViewColumn Header="{x:Static props:Resources.Name}" DisplayMemberBinding="{Binding NickName}"/>
+                        <GridViewColumn Header="{x:Static props:Resources.Score}" DisplayMemberBinding="{Binding Score}"/>
+                        <GridViewColumn Header="{x:Static props:Resources.Win}" DisplayMemberBinding="{Binding Win}"/>
+                        <GridViewColumn Header="{x:Static props:Resources.Fail}" DisplayMemberBinding="{Binding Fail}"/>
+                        <GridViewColumn Header="{x:Static props:Resources.Drawn}" DisplayMemberBinding="{Binding Drawn}"/>
+                        <GridViewColumn Header="{x:Static props:Resources.UpdateTime}" DisplayMemberBinding="{Binding ModifyTime, StringFormat='yy-MM-dd HH:mm:ss'}"/>
+                    </GridView.Columns>
+                </GridView>
+            </ListView.View>
+        </ListView>
+        <Button Content="{x:Static props:Resources.ClickToRefresh}" Style="{StaticResource FloatBtnStyle}" 
+                Padding="6" Grid.Row="2" Click="RefreshBtnClick"
+                local:FloatExtension.CornerRadius="0" FontSize="16"/>
+    </Grid>
+</Page>

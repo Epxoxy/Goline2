@@ -9,12 +9,12 @@ namespace NetworkService
     public abstract class ProxyBase : IProxy
     {
         public string Token { get; set; }
-        private IProxyCenter center;
+        private IBridge bridge;
 
         //Enable proxy
-        public void Enable(IProxyCenter center)
+        public void Enable(IBridge center)
         {
-            this.center = center;
+            this.bridge = center;
             OnEnable();
         }
 
@@ -25,22 +25,22 @@ namespace NetworkService
         }
 
         //Relay message from message center
-        public abstract bool Relay(Message msg);
+        public abstract void Relay(Message msg);
 
         //Relay message to message center
         //Let message hand message
-        protected void onMessage(Message msg)
+        protected void bridgeOf(Message msg)
         {
-            if (this.center == null) return;
+            if (this.bridge == null) return;
             System.Diagnostics.Debug.WriteLine("Remote <-- " + msg.Type);
-            this.center.HandMessage(msg);
+            this.bridge.HandMessage(msg);
         }
 
         public void Dispose()
         {
-            if (this.center != null)
-                this.center.DetachProxy(this.Token);
-            this.center = null;
+            if (this.bridge != null)
+                this.bridge.DetachProxy(this.Token);
+            this.bridge = null;
             onDispose();
         }
 

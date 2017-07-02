@@ -14,5 +14,6 @@ namespace LogicUnit.Interface
         IEnumerable<Point3Line> LinesOf(IntPoint p);
         IEnumerable<Point3Line> LinesOf(int x, int y);
         IEnumerable<Point3Line> Lines();
+        int[,] CurrentData();
     }
 }
