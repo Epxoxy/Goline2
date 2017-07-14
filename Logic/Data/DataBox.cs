@@ -1,4 +1,5 @@
 ﻿using LogicUnit.Data;
+using System;
 using System.Collections.Generic;
 
 namespace LogicUnit
@@ -68,7 +69,7 @@ namespace LogicUnit
                 int data = datas[x, y];
                 if(data > ok && data != no)
                 {
-                    --ReachableCount;
+                    ++ReachableCount;
                     --stepCountor[data];
                     datas[x, y] = ok;
                     return true;
@@ -98,12 +99,14 @@ namespace LogicUnit
 
         internal bool Redo(out DataPoint dp)
         {
+            throw new NotImplementedException("Developing function");
+
             dp = default(DataPoint);
             if (CanRedo)
             {
                 dp = redoList.Pop();
                 undoList.Push(dp);
-                Reset(dp.X, dp.Y);
+                Record(dp.X, dp.Y, dp.Data);
                 return true;
             }
             return false;

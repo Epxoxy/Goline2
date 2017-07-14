@@ -25,14 +25,14 @@
         </TextBlock>
         <TextBlock>
                 <Run Text="{x:Static props:Resources.AboutOpenSource}" Foreground="DimGray" FontSize="16"/>
-        <Hyperlink NavigateUri="https://github.com/Encrypt5px" TargetName="He" RequestNavigate="OnHyperlinkRequestNavigate">
+        <Hyperlink NavigateUri="https://github.com/Epxoxy" TargetName="He" RequestNavigate="OnHyperlinkRequestNavigate">
                 <Run Text="&#xA;" FontSize="16"/>    
                 <Run Text="{x:Static props:Resources.VisitGithub}" FontSize="16"/>    
             </Hyperlink>
         </TextBlock>
         <TextBlock>
             <Run Text="{x:Static props:Resources.Reference}" FontSize="18"/>
-            <Hyperlink NavigateUri="https://github.com/Encrypt5px" TargetName="He" RequestNavigate="OnHyperlinkRequestNavigate">
+            <Hyperlink NavigateUri="https://github.com/Epxoxy" TargetName="He" RequestNavigate="OnHyperlinkRequestNavigate">
                 <Run Text="&#xA;Add Reference" FontSize="16"/>    
             </Hyperlink>
         </TextBlock>
